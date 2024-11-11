@@ -4,7 +4,13 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            //XML Data import
+            //Json Data import
+            //Export XML
+            //CRUD
+            //Graph
+            //Queries
+
         }
     }
 }
