@@ -5,19 +5,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace HYPJCW_HSZFT.Entities.Entity_Models
 {
     public class Employee
     {
-        [StringLength(50)]
+        [XmlAttribute("employeeid")]
         [Key]
         public string EmployeeId { get; set; }
+
         [StringLength(200)]
         public string Name { get; set; }
-        [Range(1960,9999)]
-        public static int BirthYear { get; set; }
-        [Range(1000,9999)]
+
+        public int BirthYear { get; set; }
+
         public int StartYear { get; set; }
         public int CompletedProjects { get; set; }
         public bool Active { get; set; }
@@ -31,23 +33,11 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public List<Departments> Departments { get; set; }
 
         public Employee(
-        string employeeId,
-        string name,
-        int birthYear,
-        int startYear,
-        int completedProjects,
-        bool active,
-        bool retired,
-        string email,
-        string phone,
-        string job,
-        string level,
-        int salary,
-        int commission,
-        List<Departments> departments = null
-    )
+            string employeeId, string name, int birthYear, int startYear,
+            int completedProjects, bool active, bool retired, string email, string phone,
+            string job, string level, int salary, int commission, List<Departments> departments)
         {
-            EmployeeId = employeeId;
+            //EmployeeId = employeeId;
             Name = name;
             BirthYear = birthYear;
             StartYear = startYear;
@@ -62,5 +52,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             Commission = commission;
             Departments = departments ?? new List<Departments>(); // Initialize with empty list if null
         }
+        public Employee() { }
+
     }
 }

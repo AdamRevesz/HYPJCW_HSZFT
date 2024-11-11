@@ -22,5 +22,9 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             DepartmentCode = departmentCode;
             HeadOfDepartment = headOfDepartment;
         }
+
+        public Departments() { }
+
+
     }
 }

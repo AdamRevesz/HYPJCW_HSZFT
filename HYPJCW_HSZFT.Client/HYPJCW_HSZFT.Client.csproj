@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HYPJCW_HSZFT.Logic\HYPJCW_HSZFT.Logic.csproj" />
+  </ItemGroup>
+
 </Project>
