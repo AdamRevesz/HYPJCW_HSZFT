@@ -1,0 +1,6 @@
+@HYPJCW_HSZFT.Endpoint_HostAddress = http://localhost:5174
+
+GET {{HYPJCW_HSZFT.Endpoint_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
