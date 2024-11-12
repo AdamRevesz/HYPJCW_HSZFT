@@ -1,9 +1,11 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
+using HYPJCW_HSZFT.Models.Entity_Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -12,6 +14,48 @@ namespace HYPJCW_HSZFT.Logic
 {
     public class ImportLogic
     {
+        public static async Task<JsonDocument> ImportJsFromUrl(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                //Fetch the Json content
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                //Read and parse ht Json
+                string content = await response.Content.ReadAsStringAsync();
+                JsonDocument jsDoc = JsonDocument.Parse(content);
+
+                return jsDoc;
+            }
+        }
+
+        public static List<Manager> GetManagersJson(JsonDocument jsDoc)
+        {
+            List<Manager> managers = new List<Manager>();
+
+            // Navigate to the root JSON element and select the "Employee" elements
+            var root = jsDoc.RootElement;
+            var managerElements = jsDoc.RootElement.EnumerateArray();
+
+            foreach (var element in managerElements)
+            {
+                Manager manager = new Manager(
+                    name: element.GetProperty("Name").GetString() ?? "Unknown",
+                    managerId: element.GetProperty("ManagerId").GetString() ?? "N/A",
+                    birthYear: element.GetProperty("BirthYear").GetInt32(),
+                    startOfEmployment: element.GetProperty("StartOfEmployment").GetString() ?? "Unknown",
+                    hasMBA: element.GetProperty("HasMBA").GetBoolean()
+                );
+
+                managers.Add(manager);
+            }
+
+            return managers;
+        }
+
+
+
         public static async Task<XDocument> ImportXmlFromUrl(string url)
         {
             using (HttpClient client = new HttpClient())
