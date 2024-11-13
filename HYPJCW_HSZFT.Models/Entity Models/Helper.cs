@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HYPJCW_HSZFT.Entities.Dependencies
+namespace HYPJCW_HSZFT.Models.Entity_Models
 {
-public class TypeOfCurrency : Attribute
+    public class Commission
     {
         public string Currency { get; set; }
+        public int Amount { get; set; }
+
     }
 }

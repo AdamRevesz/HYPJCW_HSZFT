@@ -1,4 +1,5 @@
 ﻿using HYPJCW_HSZFT.Entities.Dependencies;
+using HYPJCW_HSZFT.Models.Entity_Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +10,7 @@ using System.Xml.Serialization;
 
 namespace HYPJCW_HSZFT.Entities.Entity_Models
 {
+    [ToExport]
     public class Employee
     {
         [XmlAttribute("employeeid")]
@@ -17,9 +19,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
 
         [StringLength(200)]
         public string Name { get; set; }
-
         public int BirthYear { get; set; }
-
         public int StartYear { get; set; }
         public int CompletedProjects { get; set; }
         public bool Active { get; set; }
@@ -29,13 +29,13 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public string Job { get; set; }
         public string Level { get; set; }
         public int Salary { get; set; }
-        public int Commission { get; set; }
+        public Commission Commission { get; set; }
         public List<Departments> Departments { get; set; }
 
         public Employee(
             string employeeId, string name, int birthYear, int startYear,
             int completedProjects, bool active, bool retired, string email, string phone,
-            string job, string level, int salary, int commission, List<Departments> departments)
+            string job, string level, int salary, Commission commission, List<Departments> departments)
         {
             //EmployeeId = employeeId;
             Name = name;

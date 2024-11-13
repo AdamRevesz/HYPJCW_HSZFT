@@ -92,7 +92,6 @@ namespace HYPJCW_HSZFT.Logic
                     Job = element.Element("Job")?.Value ?? "No job",
                     Level = element.Element("Level")?.Value ?? "null",
                     Salary = int.Parse(element.Element("Salary")?.Value ?? "0"),
-                    Commission = int.Parse(element.Element("Commission")?.Value ?? "0"),
                     Departments = element.Element("Departments")?
                         .Elements("Department")?
                         .Select(dept => new Departments(
@@ -102,6 +101,15 @@ namespace HYPJCW_HSZFT.Logic
                         ))
                         .ToList() ?? new List<Departments>() // Use empty list if no departments found
                 };
+                var commissionElement = element.Element("Commission");
+                if (commissionElement != null)
+                {
+                    employee.Commission = new Commission
+                    {
+                        Amount = int.Parse(commissionElement.Value),
+                        Currency = commissionElement.Attribute("currency")?.Value ?? "0000"
+                    };
+                }
 
                 employees.Add(employee);
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HYPJCW_HSZFT.Entities.Dependencies;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace HYPJCW_HSZFT.Entities.Entity_Models
 {
+    [ToExport]
     public class Departments
     {
         [MaxLength(200)]
