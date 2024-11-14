@@ -31,6 +31,8 @@ namespace HYPJCW_HSZFT.Client
             var xmlDocument = ExportLogic.ExportToXml(typesToExport);
             xmlDocument.Save("exported_entities.xml");
             Console.WriteLine(xmlDocument);
+
+            Graphlogic.GraphOfEmployeeSalary(employees);
         }
     }
 }
