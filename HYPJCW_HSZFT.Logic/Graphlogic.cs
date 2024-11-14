@@ -13,7 +13,7 @@ namespace HYPJCW_HSZFT.Logic
         {
             foreach (var employee in employees)
             {
-                Console.WriteLine($"\n{employee.Name,-13}, {GraphGraphic(employee.Salary), 20} {employee.Salary} HUF");
+                Console.WriteLine($"\n{employee.Name,-13} {GraphGraphic(employee.Salary), 20} {employee.Salary} HUF");
             }
         }
 
