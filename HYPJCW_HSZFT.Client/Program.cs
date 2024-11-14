@@ -33,6 +33,7 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine(xmlDocument);
 
             Graphlogic.GraphOfEmployeeSalary(employees);
+            
         }
     }
 }

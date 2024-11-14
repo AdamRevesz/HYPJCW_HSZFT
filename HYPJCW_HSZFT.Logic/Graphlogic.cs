@@ -19,8 +19,12 @@ namespace HYPJCW_HSZFT.Logic
 
         public static string GraphGraphic (int amount)
         {
-            double barLength = amount / 20000;
-            string bar = new string('█', Convert.ToInt32(barLength));
+            double scale = 20.0;  // Adjust this to control bar length relative to max amount
+            double barLength = amount / 1000.0 / scale;  // Divide amount by 1000 to scale down
+
+            // Ensure bar length is at least 1 for small values
+            int barCharacters = Math.Max(1, Convert.ToInt32(barLength));
+            string bar = new string('█', barCharacters);
 
             return bar;
         }
