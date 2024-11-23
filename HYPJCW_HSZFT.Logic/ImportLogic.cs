@@ -30,9 +30,9 @@ namespace HYPJCW_HSZFT.Logic
             }
         }
 
-        public static List<Manager> GetManagersJson(JsonDocument jsDoc)
+        public static List<Managers> GetManagersJson(JsonDocument jsDoc)
         {
-            List<Manager> managers = new List<Manager>();
+            List<Managers> managers = new List<Managers>();
 
             // Navigate to the root JSON element and select the "Employee" elements
             var root = jsDoc.RootElement;
@@ -40,7 +40,7 @@ namespace HYPJCW_HSZFT.Logic
 
             foreach (var element in managerElements)
             {
-                Manager manager = new Manager(
+                Managers manager = new Managers(
                     name: element.GetProperty("Name").GetString() ?? "Unknown",
                     managerId: element.GetProperty("ManagerId").GetString() ?? "N/A",
                     birthYear: element.GetProperty("BirthYear").GetInt32(),
@@ -72,13 +72,13 @@ namespace HYPJCW_HSZFT.Logic
             }
         }
 
-        public static List<Employee> GetEmployeesXml(XDocument xDoc)
+        public static List<Employees> GetEmployeesXml(XDocument xDoc)
         {
-            List<Employee> employees = new List<Employee>();
+            List<Employees> employees = new List<Employees>();
 
             foreach (var element in xDoc.Descendants("Employee"))
             {
-                Employee employee = new Employee
+                Employees employee = new Employees
                 {
                     EmployeeId = element.Attribute("EmployeeId")?.Value ?? "0",
                     Name = element.Element("Name")?.Value ?? "Null",

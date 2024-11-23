@@ -5,15 +5,17 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace HYPJCW_HSZFT.Entities.Entity_Models
 {
     [ToExport]
-    public class Employee
+    public class Employees
     {
         [XmlAttribute("employeeid")]
+        [JsonIgnore]
         [Key]
         public string EmployeeId { get; set; }
 
@@ -30,9 +32,9 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public string Level { get; set; }
         public int Salary { get; set; }
         public Commission Commission { get; set; }
-        public List<Departments> Departments { get; set; }
+        public virtual ICollection<Departments> Departments { get; set; }
 
-        public Employee(
+        public Employees(
             string employeeId, string name, int birthYear, int startYear,
             int completedProjects, bool active, bool retired, string email, string phone,
             string job, string level, int salary, Commission commission, List<Departments> departments)
@@ -52,7 +54,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             Commission = commission;
             Departments = departments ?? new List<Departments>(); // Initialize with empty list if null
         }
-        public Employee() { }
+        public Employees() { }
 
     }
 }

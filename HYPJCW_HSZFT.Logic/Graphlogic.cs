@@ -9,7 +9,7 @@ namespace HYPJCW_HSZFT.Logic
 {
     public class Graphlogic
     {
-        public static void GraphOfEmployeeSalary(List<Employee> employees)
+        public static void GraphOfEmployeeSalary(List<Employees> employees)
         {
             foreach (var employee in employees)
             {

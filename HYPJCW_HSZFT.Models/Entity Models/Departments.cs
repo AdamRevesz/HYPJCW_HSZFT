@@ -25,6 +25,8 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             HeadOfDepartment = headOfDepartment;
         }
 
+        public virtual ICollection<Employees> Employees { get; set; }
+
         public Departments() { }
 
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HYPJCW_HSZFT.Models.Entity_Models
 {
-    public class Manager
+    public class Managers
     {
         public string Name { get; set; }
         [Key]
@@ -15,12 +15,12 @@ namespace HYPJCW_HSZFT.Models.Entity_Models
         public int BirthYear { get; set; }
         public string StartOfEmployment { get; set; }
         public bool HasMBA { get; set; }
-        public Manager()
+        public Managers()
         {
             
         }
 
-        public Manager(string name, string managerId, int birthYear, string startOfEmployment, bool hasMBA)
+        public Managers(string name, string managerId, int birthYear, string startOfEmployment, bool hasMBA)
         {
             Name = name;
             ManagerId = managerId;

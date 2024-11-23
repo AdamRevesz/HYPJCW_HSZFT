@@ -11,7 +11,7 @@ namespace HYPJCW_HSZFT.Client
             string url ="https://nik.siposm.hu/db/managers.json";
             var test = await ImportLogic.ImportJsFromUrl(url);
 
-            List<Manager> managers = ImportLogic.GetManagersJson(test);
+            List<Managers> managers = ImportLogic.GetManagersJson(test);
 
             foreach (var item in managers)
             {
@@ -21,13 +21,13 @@ namespace HYPJCW_HSZFT.Client
             string url2 ="https://raw.githubusercontent.com/siposm/oktatas-hft/refs/heads/master/BPROF-HSZF/semester-project/employees-departments.xml";
             var test2 = await ImportLogic.ImportXmlFromUrl(url2);
 
-            List<Employee> employees = ImportLogic.GetEmployeesXml(test2);
+            List<Employees> employees = ImportLogic.GetEmployeesXml(test2);
 
             foreach (var item in employees)
             {
                 Console.WriteLine($"Name: {item.Name} \t Salary: {item.Salary}");
             }
-            var typesToExport = new[] {typeof(Employee), typeof(Departments)};
+            var typesToExport = new[] {typeof(Employees), typeof(Departments)};
             var xmlDocument = ExportLogic.ExportToXml(typesToExport);
             xmlDocument.Save("exported_entities.xml");
             Console.WriteLine(xmlDocument);
