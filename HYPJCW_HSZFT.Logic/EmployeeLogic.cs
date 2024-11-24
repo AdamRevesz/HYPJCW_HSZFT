@@ -89,12 +89,13 @@ namespace HYPJCW_HSZFT.Logic
 
         public IQueryable<Employees> GetEmployeesWorkingButPension()
         {
-            throw new NotImplementedException();
+            var everyEmployee = employeeRepo.ReadAll();
+            return everyEmployee.Where(e => e.Retired && e.Active);
         }
 
         public IQueryable<Employees> GetEmployeesOnPension()
         {
-            throw new NotImplementedException();
+
         }
 
         public IQueryable<Employees> GetAverageOfSalaryOfEmployeesOnPension()
