@@ -22,7 +22,7 @@ namespace HYPJCW_HSZFT.Logic
             return employeeRepo.ReadAll();
         }
 
-        public LevelDto RateOfLevels(IQueryable<Employees> employees)
+        public void GetRatesOfEmployeeLevels(IQueryable<Employees> employees)
         {
             LevelDto rate = new LevelDto();
 
@@ -40,19 +40,25 @@ namespace HYPJCW_HSZFT.Logic
                 {
                     case "junior":
                         rate.Junior = group.Count;
+                        Console.WriteLine($"\nJunior: {Graphlogic.GraphGraphicSmallNumber(rate.Junior)} {rate.Junior}");
                         break;
                     case "medior":
                         rate.Medior = group.Count;
+                        Console.WriteLine($"\nMedior: {Graphlogic.GraphGraphicSmallNumber(rate.Medior)} {rate.Medior}");
+
                         break;
                     case "senior":
                         rate.Senior = group.Count;
+                        Console.WriteLine($"\nSenior: {Graphlogic.GraphGraphicSmallNumber(rate.Senior)} {rate.Senior}");
+
                         break;
                     default:
                         rate.None = group.Count;
+                        Console.WriteLine($"\nNone: {Graphlogic.GraphGraphicSmallNumber(rate.None)} {rate.None}");
                         break;
                 }
             }
-            return rate;
+            
         }
 
         public AveragesalaryDto AverageSalary (IQueryable<Employees> employees)
@@ -125,10 +131,6 @@ namespace HYPJCW_HSZFT.Logic
             return everyEmployee;
         }
 
-        public LevelDto GetRatesOfEmployeeLevels()
-        {
-            throw new NotImplementedException();
-        }
 
         public IQueryable<Employees> GetEmployeesOfDepartmentWithDoctorateManager()
         {

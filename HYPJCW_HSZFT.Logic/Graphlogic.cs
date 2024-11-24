@@ -28,5 +28,16 @@ namespace HYPJCW_HSZFT.Logic
 
             return bar;
         }
+
+        public static string GraphGraphicSmallNumber(int amount)
+        {
+            double scale = 1.0;
+            double barLength = amount / scale;
+
+            int barCharacters = Math.Max(1, Convert.ToInt32(barLength));
+            string bar = new string('█', barCharacters);
+
+            return bar;
+        }
     }
 }
