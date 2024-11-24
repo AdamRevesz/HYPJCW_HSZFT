@@ -14,7 +14,7 @@ namespace HYPJCW_HSZFT.Models.Entity_Models
         public string ManagerId { get; set; }
         public int BirthYear { get; set; }
         public string StartOfEmployment { get; set; }
-        public bool HasMBA { get; set; }
+        public bool HasMba { get; set; }
         public Managers()
         {
             
@@ -26,7 +26,7 @@ namespace HYPJCW_HSZFT.Models.Entity_Models
             ManagerId = managerId;
             BirthYear = birthYear;
             StartOfEmployment = startOfEmployment;
-            HasMBA = hasMBA;
+            HasMba = hasMBA;
         }
     }
 }

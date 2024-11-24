@@ -37,6 +37,7 @@ namespace HYPJCW_HSZFT.Logic
             // Navigate to the root JSON element and select the "Employee" elements
             var root = jsDoc.RootElement;
             var managerElements = jsDoc.RootElement.EnumerateArray();
+            MbaRateDto rate = new MbaRateDto();
 
             foreach (var element in managerElements)
             {
@@ -47,6 +48,14 @@ namespace HYPJCW_HSZFT.Logic
                     startOfEmployment: element.GetProperty("StartOfEmployment").GetString() ?? "Unknown",
                     hasMBA: element.GetProperty("HasMBA").GetBoolean()
                 );
+                if (manager.HasMba)
+                {
+                    rate.WithMba++;
+                }
+                else
+                {
+                    rate.WithoutMba++;
+                }
 
                 managers.Add(manager);
             }
