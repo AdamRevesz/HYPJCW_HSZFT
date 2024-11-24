@@ -17,6 +17,8 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public string DepartmentCode { get; set; }
         [MaxLength(200)]
         public string HeadOfDepartment { get; set; }
+        public virtual ICollection<Employees> Employees { get; set; }
+
 
         public Departments(string name, string departmentCode,string headOfDepartment )
         {
@@ -24,8 +26,6 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             DepartmentCode = departmentCode;
             HeadOfDepartment = headOfDepartment;
         }
-
-        public virtual ICollection<Employees> Employees { get; set; }
 
         public Departments() { }
 

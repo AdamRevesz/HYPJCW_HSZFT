@@ -13,6 +13,7 @@ namespace HYPJCW_HSZFT.Logic
     public class EmployeeLogic : IEmployeesLogic
     {
         IRepository<Employees> employeeRepo;
+        IRepository<Departments> departmentRepo;
         public EmployeeLogic(IRepository<Employees> repo)
         {
             employeeRepo = repo;
@@ -134,7 +135,16 @@ namespace HYPJCW_HSZFT.Logic
 
         public IQueryable<Employees> GetEmployeesOfDepartmentWithDoctorateManager()
         {
-            throw new NotImplementedException();
+            var everyDepartment = departmentRepo.ReadAll();
+            var everyEmployee = employeeRepo.ReadAll();
+
+            return everyEmployee
+                .Where(e => e.Departments.Any(d =>
+                everyDepartment
+                .Where(dept => dept.HeadOfDepartment.Contains("Dr. "))
+                .Select(dept => dept.DepartmentCode)
+                .Contains(d.DepartmentCode)
+                ));
         }
 
         public IQueryable<Employees> GetAverageOfSalaryEachLevel()
