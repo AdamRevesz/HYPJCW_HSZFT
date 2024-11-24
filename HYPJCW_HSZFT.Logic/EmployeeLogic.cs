@@ -107,9 +107,22 @@ namespace HYPJCW_HSZFT.Logic
                 .Average(e => e.Salary);
         }
 
-        public IQueryable<Employees> GetWorkersDescSalaryWithPension()
+        public IEnumerable<Employees> GetWorkersDescSalaryWithCommission()
         {
-            throw new NotImplementedException();
+            var everyEmployee = employeeRepo.ReadAll()
+                .Where(e => !string.IsNullOrEmpty(e.Commission))
+                .OrderByDescending(e => e.Salary)
+                .ToList();
+
+            foreach (var e in everyEmployee)
+            {
+                if (e.Commission.Contains("eur", StringComparison.OrdinalIgnoreCase))
+                {
+                    var commissionValue = decimal.Parse(e.Commission.Replace("eur", "").Trim());
+                    e.Commission = (commissionValue * 400).ToString("F0"); // Convert to HUF
+                }
+            }
+            return everyEmployee;
         }
 
         public LevelDto GetRatesOfEmployeeLevels()

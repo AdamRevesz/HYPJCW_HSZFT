@@ -21,7 +21,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         IQueryable<Employees> GetEmployeesWorkingButPension();
         IQueryable<Employees> GetEmployeesOnPension();
         double GetAverageOfSalaryOfEmployeesOnPension();
-        IQueryable<Employees> GetWorkersDescSalaryWithPension();
+        IEnumerable<Employees> GetWorkersDescSalaryWithCommission();
         LevelDto GetRatesOfEmployeeLevels();
         IQueryable<Employees> GetEmployeesOfDepartmentWithDoctorateManager();
         IQueryable<Employees> GetAverageOfSalaryEachLevel();
