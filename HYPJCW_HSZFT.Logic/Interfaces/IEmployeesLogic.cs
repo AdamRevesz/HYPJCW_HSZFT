@@ -25,7 +25,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         void GetRatesOfEmployeeLevels();
         IQueryable<Employees> GetEmployeesOfDepartmentWithDoctorateManager();
         AveragesalaryDto GetNumberOfEmployeesUnderOrOverTheAverageSalary();
-        double GetAverageOfSalaryEachLevel();
+        Dictionary<string, double> GetAverageOfSalaryEachLevel();
         IQueryable<Employees> WhoEarnsMoreJuniorOrMedior();
         Employees GetHighestCommissionFromLevel();
         Employees GetEmployeeWithLeastProjectsBasedOnZearsWorked();

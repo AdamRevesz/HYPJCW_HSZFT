@@ -60,7 +60,7 @@ namespace HYPJCW_HSZFT.Logic
                         break;
                 }
             }
-            
+
         }
 
         public AveragesalaryDto GetNumberOfEmployeesUnderOrOverTheAverageSalary()
@@ -149,10 +149,20 @@ namespace HYPJCW_HSZFT.Logic
                 ));
         }
 
-        
 
-        public double GetAverageOfSalaryEachLevel()
+
+        public Dictionary<string, double> GetAverageOfSalaryEachLevel()
         {
+            var everyEmployee = employeeRepo.ReadAll();
+            var grouped = everyEmployee
+                .GroupBy(e => e.Level.ToLower()?? "unkown")
+                .Select(g => new
+                {
+                    Level = g.Key,
+                    AverageSalary = g.Average(e => e.Salary)
+                })
+                .ToDictionary(x => x.Level, x => x.AverageSalary);
+            return grouped;
 
         }
 
