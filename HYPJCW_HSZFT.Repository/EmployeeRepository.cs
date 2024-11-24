@@ -31,6 +31,7 @@ namespace HYPJCW_HSZFT.Repository
                 }
                 catch (Exception)
                 {
+
                 }
 
             }
