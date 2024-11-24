@@ -23,9 +23,10 @@ namespace HYPJCW_HSZFT.Logic
             return employeeRepo.ReadAll();
         }
 
-        public void GetRatesOfEmployeeLevels(IQueryable<Employees> employees)
+        public void GetRatesOfEmployeeLevels()
         {
             LevelDto rate = new LevelDto();
+            var employees = employeeRepo.ReadAll();
 
             var grouped = employees
                 .GroupBy(e => e.Level.ToLower())
@@ -62,11 +63,12 @@ namespace HYPJCW_HSZFT.Logic
             
         }
 
-        public AveragesalaryDto AverageSalary (IQueryable<Employees> employees)
+        public AveragesalaryDto GetNumberOfEmployeesUnderOrOverTheAverageSalary()
         {
-            var average = employees.Average(x => x.Salary);
+            var everEmployee = employeeRepo.ReadAll();
+            var average = everEmployee.Average(x => x.Salary);
 
-            var result = employees
+            var result = everEmployee
                 .GroupBy(x => x.Salary < average)
                 .Select(g => new
                 {
@@ -147,9 +149,11 @@ namespace HYPJCW_HSZFT.Logic
                 ));
         }
 
-        public IQueryable<Employees> GetAverageOfSalaryEachLevel()
+        
+
+        public double GetAverageOfSalaryEachLevel()
         {
-            throw new NotImplementedException();
+
         }
 
         public IQueryable<Employees> WhoEarnsMoreJuniorOrMedior()
