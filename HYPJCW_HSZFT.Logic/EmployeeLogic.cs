@@ -77,7 +77,8 @@ namespace HYPJCW_HSZFT.Logic
 
         public IQueryable<Employees> GetEmployeesBornInThe80()
         {
-            throw new NotImplementedException();
+            var everyEmployee = employeeRepo.ReadAll();
+            return everyEmployee.Where(p => p.BirthYear >= 1980 && p.BirthYear <= 1989);
         }
 
         public IQueryable<Employees> GetEmployeesAtleastWorkingInTwoDepartments()
