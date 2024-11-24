@@ -155,7 +155,7 @@ namespace HYPJCW_HSZFT.Logic
         {
             var everyEmployee = employeeRepo.ReadAll();
             var grouped = everyEmployee
-                .GroupBy(e => e.Level.ToLower()?? "unkown")
+                .GroupBy(e => e.Level.ToLower() ?? "unkown")
                 .Select(g => new
                 {
                     Level = g.Key,
@@ -166,9 +166,20 @@ namespace HYPJCW_HSZFT.Logic
 
         }
 
-        public IQueryable<Employees> WhoEarnsMoreJuniorOrMedior()
+        public Employees WhoEarnsMoreJuniorOrMedior() //Average salary medior or highest salary junior
         {
-            throw new NotImplementedException();
+            var everyEmployee = employeeRepo.ReadAll();
+
+            var mediors = everyEmployee.Where(e => e.Level.ToLower() == "junior");
+            var juniors = everyEmployee.Where(e => e.Level.ToLower() == "medior");
+
+            var averageMediorSalary = mediors.Any() ? mediors.Average(m => m.Salary) : 0;
+            var maxJuniorSalary = juniors.Any() ? juniors.Max(j => j.Salary) : 0;
+            if(averageMediorSalary > maxJuniorSalary)
+            {
+                return (Employees)mediors.Where(m => m.Salary == averageMediorSalary);
+            }
+            return (Employees)juniors.Where(j => j.Salary == maxJuniorSalary);
         }
 
         public Employees GetHighestCommissionFromLevel()
