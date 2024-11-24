@@ -95,7 +95,8 @@ namespace HYPJCW_HSZFT.Logic
 
         public IQueryable<Employees> GetEmployeesOnPension()
         {
-
+            var everyEmployee = employeeRepo.ReadAll();
+            return everyEmployee.Where(e => e.Retired && !e.Active);
         }
 
         public IQueryable<Employees> GetAverageOfSalaryOfEmployeesOnPension()
