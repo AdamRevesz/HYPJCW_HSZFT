@@ -83,7 +83,8 @@ namespace HYPJCW_HSZFT.Logic
 
         public IQueryable<Employees> GetEmployeesAtleastWorkingInTwoDepartments()
         {
-            throw new NotImplementedException();
+            var everyEployee = employeeRepo.ReadAll();
+            return everyEployee.Where(e => e.Departments.Count >= 2);
         }
 
         public IQueryable<Employees> GetEmployeesWorkingButPension()
