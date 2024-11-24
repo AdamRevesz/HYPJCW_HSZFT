@@ -31,13 +31,13 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public string Job { get; set; }
         public string Level { get; set; }
         public int Salary { get; set; }
-        public Commission Commission { get; set; } = new Commission();
+        public string Commission { get; set; } = "";
         public virtual ICollection<Departments> Departments { get; set; }
 
         public Employees(
             string employeeId, string name, int birthYear, int startYear,
             int completedProjects, bool active, bool retired, string email, string phone,
-            string job, string level, int salary, Commission commission, ICollection<Departments> departments)
+            string job, string level, int salary, string commission, ICollection<Departments> departments)
         {
             //EmployeeId = employeeId;
             Name = name;

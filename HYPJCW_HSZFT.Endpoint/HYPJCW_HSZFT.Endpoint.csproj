@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HYPJCW_HSZFT.Data\HYPJCW_HSZFT.Data.csproj" />
+    <ProjectReference Include="..\HYPJCW_HSZFT.Logic\HYPJCW_HSZFT.Logic.csproj" />
   </ItemGroup>
 
 </Project>

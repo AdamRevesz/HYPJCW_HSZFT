@@ -14,7 +14,7 @@ namespace HYPJCW_HSZFT.Data
         public DbSet<Departments> Departments { get; set; }
         public DbSet<Managers> Managers { get; set; }
 
-        public MainDbContext(DbContextOptions options) : base(options)
+        public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
 
         }
@@ -26,12 +26,7 @@ namespace HYPJCW_HSZFT.Data
                 entity.HasKey(x => x.EmployeeId);
 
                 entity.HasMany(e => e.Departments)
-                .WithMany(d => d.Employees)
-              .UsingEntity<Dictionary<string, object>>
-              (
-                "EmployeeDepartment",
-                j => j.HasOne<Departments>().WithMany().HasForeignKey("DepartmentId"),
-                j => j.HasOne<Employees>().WithMany().HasForeignKey("EmployeeId"));
+                .WithMany(d => d.Employees);
             }
             );
             mod.Entity<Departments>(entity =>
@@ -44,6 +39,9 @@ namespace HYPJCW_HSZFT.Data
                 entity.HasKey(x => x.ManagerId);
             });
 
+
+
+            base.OnModelCreating(mod);
         }
     }
 }

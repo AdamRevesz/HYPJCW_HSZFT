@@ -90,7 +90,7 @@ namespace HYPJCW_HSZFT.Logic
             {
                 Employees employee = new Employees
                 {
-                    EmployeeId = element.Attribute("EmployeeId")?.Value ?? "0",
+                    EmployeeId = element.Attribute("employeeid")?.Value ?? "0",
                     Name = element.Element("Name")?.Value ?? "Null",
                     BirthYear = int.Parse(element.Element("BirthYear")?.Value ?? "0000"),
                     StartYear = int.Parse(element.Element("StartYear")?.Value ?? "0000"),
@@ -102,24 +102,19 @@ namespace HYPJCW_HSZFT.Logic
                     Job = element.Element("Job")?.Value ?? "No job",
                     Level = element.Element("Level")?.Value ?? "null",
                     Salary = int.Parse(element.Element("Salary")?.Value ?? "0"),
+                    Commission = element.Element("Commission")?.Attribute("currency") != null
+                     ? $"{element.Element("Commission")?.Attribute("currency").Value} {element.Element("Commission")?.Value}"
+                     : element.Element("Commission")?.Value ?? "0",
                     Departments = element.Element("Departments")?
-                        .Elements("Department")?
-                        .Select(dept => new Departments(
-                            dept.Element("Name")?.Value ?? "Unknown",
-                            dept.Element("DepartmentCode")?.Value ?? "000",
-                            dept.Element("HeadOfDepartment")?.Value ?? "Unknown"
-                        ))
-                        .ToList() ?? new List<Departments>() // Use empty list if no departments found
+                     .Elements("Department")?
+                     .Select(dept => new Departments(
+                      dept.Element("Name")?.Value ?? "Unknown",
+                      dept.Element("DepartmentCode")?.Value ?? "000",
+                      dept.Element("HeadOfDepartment")?.Value ?? "Unknown"
+            ))
+            .ToList() ?? new List<Departments>()
                 };
-                var commissionElement = element.Element("Commission");
-                if (commissionElement != null)
-                {
-                    employee.Commission = new Commission
-                    {
-                        Amount = int.Parse(commissionElement.Value),
-                        Currency = commissionElement.Attribute("currency")?.Value ?? "0000"
-                    };
-                }
+
 
                 employees.Add(employee);
             }
