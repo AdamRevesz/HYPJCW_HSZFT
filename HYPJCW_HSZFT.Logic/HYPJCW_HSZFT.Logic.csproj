@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HYPJCW_HSZFT.Models\HYPJCW_HSZFT.Models.csproj" />
+    <ProjectReference Include="..\HYPJCW_HSZFT.Repository\HYPJCW_HSZFT.Repository.csproj" />
   </ItemGroup>
 
 </Project>

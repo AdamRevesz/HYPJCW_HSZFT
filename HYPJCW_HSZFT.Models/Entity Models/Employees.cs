@@ -17,7 +17,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         [XmlAttribute("employeeid")]
         [JsonIgnore]
         [Key]
-        public string EmployeeId { get; set; }
+        public string EmployeeId { get; set; } = "";
 
         [StringLength(200)]
         public string Name { get; set; }
@@ -26,18 +26,18 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public int CompletedProjects { get; set; }
         public bool Active { get; set; }
         public bool Retired { get; set; }
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
         public string Phone { get; set; }
         public string Job { get; set; }
         public string Level { get; set; }
         public int Salary { get; set; }
-        public Commission Commission { get; set; }
+        public Commission Commission { get; set; } = new Commission();
         public virtual ICollection<Departments> Departments { get; set; }
 
         public Employees(
             string employeeId, string name, int birthYear, int startYear,
             int completedProjects, bool active, bool retired, string email, string phone,
-            string job, string level, int salary, Commission commission, List<Departments> departments)
+            string job, string level, int salary, Commission commission, ICollection<Departments> departments)
         {
             //EmployeeId = employeeId;
             Name = name;

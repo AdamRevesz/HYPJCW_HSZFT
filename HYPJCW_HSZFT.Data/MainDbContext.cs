@@ -1,6 +1,10 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
 
 namespace HYPJCW_HSZFT.Data
 {
@@ -10,38 +14,36 @@ namespace HYPJCW_HSZFT.Data
         public DbSet<Departments> Departments { get; set; }
         public DbSet<Managers> Managers { get; set; }
 
-        public MainDbContext(DbContextOptions option) : base(option)
+        public MainDbContext(DbContextOptions options) : base(options)
         {
-            this.Database.EnsureCreated();
+
         }
 
-
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder mod)
         {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Employees>(entity =>
+            mod.Entity<Employees>(entity =>
             {
-                entity.HasKey(e => e.EmployeeId);
+                entity.HasKey(x => x.EmployeeId);
 
                 entity.HasMany(e => e.Departments)
-                    .WithMany(d => d.Employees);
-
-            });
-
-            modelBuilder.Entity<Departments>(entity =>
+                .WithMany(d => d.Employees)
+              .UsingEntity<Dictionary<string, object>>
+              (
+                "EmployeeDepartment",
+                j => j.HasOne<Departments>().WithMany().HasForeignKey("DepartmentId"),
+                j => j.HasOne<Employees>().WithMany().HasForeignKey("EmployeeId"));
+            }
+            );
+            mod.Entity<Departments>(entity =>
             {
-            entity.HasKey(d => d.DepartmentCode);
-
-                entity.HasMany(d => d.Employees)
-                .WithMany(d => d.Departments);
+                entity.HasKey(x => x.DepartmentCode);
             });
 
-            modelBuilder.Entity<Managers>(entity =>
+            mod.Entity<Managers>(entity =>
             {
-                entity.HasKey(m => m.ManagerId);
+                entity.HasKey(x => x.ManagerId);
             });
+
         }
     }
 }
