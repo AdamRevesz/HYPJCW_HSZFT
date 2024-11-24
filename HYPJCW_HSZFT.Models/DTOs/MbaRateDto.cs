@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HYPJCW_HSZFT.Models.Entity_Models
+namespace HYPJCW_HSZFT.Models.DTOs
 {
     public class MbaRateDto
     {

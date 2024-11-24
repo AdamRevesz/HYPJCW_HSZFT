@@ -1,4 +1,5 @@
-﻿using HYPJCW_HSZFT.Models.Entity_Models;
+﻿using HYPJCW_HSZFT.Models.DTOs;
+using HYPJCW_HSZFT.Models.Entity_Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
