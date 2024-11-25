@@ -210,7 +210,9 @@ namespace HYPJCW_HSZFT.Logic
 
         public IQueryable<Employees> GetSalaryOfEmployeesBasedOnBirthYear()
         {
-            throw new NotImplementedException();
+            var everyEmployee = employeeRepo.ReadAll();
+            return everyEmployee
+                .OrderBy(e => e.BirthYear);
         }
 
         public Employees GetActiveEmployeeLeastProjects()
