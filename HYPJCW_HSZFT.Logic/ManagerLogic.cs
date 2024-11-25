@@ -63,7 +63,18 @@ namespace HYPJCW_HSZFT.Logic
 
         public Managers GetLongestWorkingManagerComparedToHisAge()
         {
-            throw new NotImplementedException();
+            var everyManager = managerRepo.ReadAll();
+
+            var managerForAge = everyManager
+                .OrderBy(m => (DateTime.Now.Year - m.BirthYear.Year) - m.StartOfEmployment.Year)
+                .FirstOrDefault();
+
+            if(managerForAge is null)
+            {
+                throw new ArgumentException();
+            }
+            return managerForAge;
+                
         }
 
         public IQueryable<Managers> GetManagersWithDoctorate()

@@ -44,7 +44,7 @@ namespace HYPJCW_HSZFT.Logic
                 Managers manager = new Managers(
                     name: element.GetProperty("Name").GetString() ?? "Unknown",
                     managerId: element.GetProperty("ManagerId").GetString() ?? "N/A",
-                    birthYear: element.GetProperty("BirthYear").GetInt32(),
+                    birthYear: DateTime.Parse(element.GetProperty("BirthYear").GetString() ?? "0000-00-00"),
                     startOfEmployment: DateTime.Parse(element.GetProperty("StartOfEmployment").GetString() ?? "0000-00-00"),
                     hasMBA: element.GetProperty("HasMBA").GetBoolean()
                 );
