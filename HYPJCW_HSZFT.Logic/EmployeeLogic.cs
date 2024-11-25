@@ -195,7 +195,17 @@ namespace HYPJCW_HSZFT.Logic
 
         public Employees GetEmployeeWithLeastProjectsBasedOnYearsWorked()
         {
-            throw new NotImplementedException();
+            var everyEmployee = employeeRepo.ReadAll();
+            var employeLeast = everyEmployee
+                .OrderBy(e => e.CompletedProjects / (DateTime.Now.Year - e.StartYear + 1)) //+1 to prevent calculating with zero
+                .FirstOrDefault();
+
+            if(employeLeast is null)
+            {
+                throw new ArgumentException();
+            }
+            return employeLeast;
+
         }
 
         public IQueryable<Employees> GetSalaryOfEmployeesBasedOnBirthYear()
