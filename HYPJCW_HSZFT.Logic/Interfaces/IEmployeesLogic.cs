@@ -27,9 +27,9 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         AveragesalaryDto GetNumberOfEmployeesUnderOrOverTheAverageSalary();
         Dictionary<string, double> GetAverageOfSalaryEachLevel();
         Employees WhoEarnsMoreJuniorOrMedior();
-        Employees GetHighestCommissionFromLevel();
-        Employees GetEmployeeWithLeastProjectsBasedOnZearsWorked();
-        IQueryable<Employees> GetSalaryOFEmployeesBasedOnBirthYear();
+        (string Level, decimal HighestCommission) GetHighestCommissionFromLevel(); //decimal for more precision
+        Employees GetEmployeeWithLeastProjectsBasedOnYearsWorked();
+        IQueryable<Employees> GetSalaryOfEmployeesBasedOnBirthYear();
         Employees GetActiveEmployeeLeastProjects();
         IQueryable<Employees> GetEmployeeWithHigherCommissionThanOthersSalary();
         

@@ -4,6 +4,7 @@ using HYPJCW_HSZFT.Models.DTOs;
 using HYPJCW_HSZFT.Repository;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -166,7 +167,7 @@ namespace HYPJCW_HSZFT.Logic
 
         }
 
-        public Employees WhoEarnsMoreJuniorOrMedior() //Average salary medior or highest salary junior
+        public Employees WhoEarnsMoreJuniorOrMedior()
         {
             var everyEmployee = employeeRepo.ReadAll();
 
@@ -175,24 +176,29 @@ namespace HYPJCW_HSZFT.Logic
 
             var averageMediorSalary = mediors.Any() ? mediors.Average(m => m.Salary) : 0;
             var maxJuniorSalary = juniors.Any() ? juniors.Max(j => j.Salary) : 0;
-            if(averageMediorSalary > maxJuniorSalary)
+            if (averageMediorSalary > maxJuniorSalary)
             {
                 return (Employees)mediors.Where(m => m.Salary == averageMediorSalary);
             }
             return (Employees)juniors.Where(j => j.Salary == maxJuniorSalary);
         }
 
-        public Employees GetHighestCommissionFromLevel()
+        public (string Level, decimal HighestCommission) GetHighestCommissionFromLevel()
+        {
+            var everyEmployee = GetWorkersDescSalaryWithCommission();
+            var highestCommssion = everyEmployee
+                .OrderByDescending(e => e.Commission)
+                .FirstOrDefault();
+
+            return (highestCommssion.Level, decimal.Parse(highestCommssion.Commission));
+        }
+
+        public Employees GetEmployeeWithLeastProjectsBasedOnYearsWorked()
         {
             throw new NotImplementedException();
         }
 
-        public Employees GetEmployeeWithLeastProjectsBasedOnZearsWorked()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQueryable<Employees> GetSalaryOFEmployeesBasedOnBirthYear()
+        public IQueryable<Employees> GetSalaryOfEmployeesBasedOnBirthYear()
         {
             throw new NotImplementedException();
         }

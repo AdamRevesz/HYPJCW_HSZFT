@@ -17,18 +17,17 @@ namespace HYPJCW_HSZFT.Logic
     {
         public static async Task<JsonDocument> ImportJsFromUrl(string url)
         {
-            using (HttpClient client = new HttpClient())
-            {
-                //Fetch the Json content
-                HttpResponseMessage response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+            using HttpClient client = new HttpClient();
 
-                //Read and parse ht Json
-                string content = await response.Content.ReadAsStringAsync();
-                JsonDocument jsDoc = JsonDocument.Parse(content);
+            //Fetch the Json content
+            HttpResponseMessage response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
 
-                return jsDoc;
-            }
+            //Read and parse ht Json
+            string content = await response.Content.ReadAsStringAsync();
+            JsonDocument jsDoc = JsonDocument.Parse(content);
+
+            return jsDoc;
         }
 
         public static List<Managers> GetManagersJson(JsonDocument jsDoc)
@@ -68,18 +67,18 @@ namespace HYPJCW_HSZFT.Logic
 
         public static async Task<XDocument> ImportXmlFromUrl(string url)
         {
-            using (HttpClient client = new HttpClient())
-            {
-                // Fetch the XML content
-                HttpResponseMessage response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+            using HttpClient client = new HttpClient();
 
-                // Read and parse the XML content
-                string content = await response.Content.ReadAsStringAsync();
-                XDocument xDoc = XDocument.Parse(content);
+            // Fetch the XML content
+            HttpResponseMessage response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
 
-                return xDoc;
-            }
+            // Read and parse the XML content
+            string content = await response.Content.ReadAsStringAsync();
+            XDocument xDoc = XDocument.Parse(content);
+
+            return xDoc;
+
         }
 
         public static List<Employees> GetEmployeesXml(XDocument xDoc)
@@ -103,7 +102,7 @@ namespace HYPJCW_HSZFT.Logic
                     Level = element.Element("Level")?.Value ?? "null",
                     Salary = int.Parse(element.Element("Salary")?.Value ?? "0"),
                     Commission = element.Element("Commission")?.Attribute("currency") != null
-                     ? $"{element.Element("Commission")?.Attribute("currency").Value} {element.Element("Commission")?.Value}"
+                     ? $"{element.Element("Commission")?.Attribute("currency")?.Value?? null} {element.Element("Commission")?.Value}"
                      : element.Element("Commission")?.Value ?? "0",
                     Departments = element.Element("Departments")?
                      .Elements("Department")?

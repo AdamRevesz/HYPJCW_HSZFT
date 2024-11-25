@@ -1,6 +1,9 @@
-﻿using HYPJCW_HSZFT.Entities.Entity_Models;
+﻿using HYPJCW_HSZFT.Data;
+using HYPJCW_HSZFT.Entities.Entity_Models;
 using HYPJCW_HSZFT.Logic;
 using HYPJCW_HSZFT.Models.Entity_Models;
+using HYPJCW_HSZFT.Repository;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HYPJCW_HSZFT.Client
 {
@@ -8,6 +11,7 @@ namespace HYPJCW_HSZFT.Client
     {
         static async Task Main(string[] args)
         {
+
             string url ="https://nik.siposm.hu/db/managers.json";
             var test = await ImportLogic.ImportJsFromUrl(url);
 
@@ -36,6 +40,9 @@ namespace HYPJCW_HSZFT.Client
 
             //EmployeeLogic.GetRatesOfEmployeeLevels(employees);
 
+            //var (level, highestCommission) = EmployeeLogic.GetHighestCommissionFromLevel(employees);
+            //Console.WriteLine($"Level: {level} \t Highest Commission: {highestCommission}");
+           
 
         }
     }
