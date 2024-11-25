@@ -2,6 +2,7 @@
 using HYPJCW_HSZFT.Logic.Interfaces;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using HYPJCW_HSZFT.Repository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,9 +41,51 @@ namespace HYPJCW_HSZFT.Logic
             throw new NotImplementedException();
         }
 
-        public void WhoWorksForTheLongest()
+        public (string Name, int YearsWorked) WhoWorksForTheLongest()
         {
-            throw new NotImplementedException();
+            var everyEmployee = employeeRepo.ReadAll();
+            var everyManager = managerRepo.ReadAll();
+
+            var longestWorkingEmployee = everyEmployee
+                .Select(e => new
+                {
+                    Name = e.Name,
+                    YearsWorked = DateTime.Now.Year - e.StartYear.Year
+                })
+                .OrderByDescending(e => e.YearsWorked)
+                .FirstOrDefault();
+
+            var longestWorkingManager = everyManager
+                .Select(m => new
+                {
+                    Name = m.Name,
+                    YearsWorked = DateTime.Now.Year - m.StartOfEmployment.Year
+                })
+                .OrderByDescending(m => m.YearsWorked)
+                .FirstOrDefault();
+
+            if (longestWorkingManager is null || longestWorkingEmployee is null)
+            {
+            throw new ArgumentException("Invalid data");
+            }
+
+            if (longestWorkingManager.YearsWorked > longestWorkingEmployee.YearsWorked)
+            {
+                return
+                (
+                  longestWorkingManager.Name,
+                  longestWorkingManager.YearsWorked
+                );
+            }
+            else if (longestWorkingEmployee.YearsWorked > longestWorkingManager.YearsWorked)
+            {
+                return
+                (
+                 longestWorkingEmployee.Name,
+                 longestWorkingEmployee.YearsWorked
+                );
+            }
+            throw new ArgumentException("They worked the same years");
         }
     }
 }

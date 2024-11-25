@@ -10,7 +10,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
 {
     public interface IMixedLogic
     {
-        void WhoWorksForTheLongest();
+        (string Name, int YearsWorked) WhoWorksForTheLongest();
         List<Managers> IsThereManagerWhoIsDepartmentManager();
         void WhoAreManagersOrDepartmentManagers();
     }
