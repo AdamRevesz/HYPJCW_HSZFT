@@ -109,9 +109,8 @@ namespace HYPJCW_HSZFT.Logic
                      .Select(dept => new Departments(
                       dept.Element("Name")?.Value ?? "Unknown",
                       dept.Element("DepartmentCode")?.Value ?? "000",
-                      dept.Element("HeadOfDepartment")?.Value ?? "Unknown"
-            ))
-            .ToList() ?? new List<Departments>()
+                      dept.Element("HeadOfDepartment")?.Value ?? "Unknown"))
+                     .ToList() ?? new List<Departments>()
                 };
 
 

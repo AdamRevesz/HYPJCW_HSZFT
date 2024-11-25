@@ -82,15 +82,35 @@ namespace HYPJCW_HSZFT.Logic
             var everyManager = managerRepo.ReadAll();
             return everyManager
                 .Where(m => m.Name.ToLower().Contains("Dr%%"));
-
         }
 
-        public MbaRateDto GetRateOfManagersWithMbaAndWithout()
+        public void GetRateOfManagersWithMbaAndWithout()
         {
-            throw new NotImplementedException();
+            MbaRateDto rate = new MbaRateDto();
+            var managers = managerRepo.ReadAll();
+
+            var grouped = managers
+                .GroupBy(m => m.HasMba)
+                .Select(g => new
+                {
+                    HasMba = g.Key,
+                    Count = g.Count()
+                })
+                .ToList();
+
+            foreach (var group in grouped)
+            {
+                if (group.HasMba)
+                {
+                    rate.WithMba = group.Count;
+                    Console.WriteLine($"\nHasMBA: {Graphlogic.GraphGraphicSmallNumber(rate.WithMba)} {rate.WithMba}");
+                }
+                rate.WithoutMba = group.Count;
+                Console.WriteLine($"\nWithoutMBA: {Graphlogic.GraphGraphicSmallNumber(rate.WithoutMba)} {rate.WithoutMba}");
+            }
         }
 
-        public void Read(string id)
+        public Managers Read(string id)
         {
             throw new NotImplementedException();
         }

@@ -11,7 +11,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
     public interface IManagerLogic
     {
         void Create(Managers manager);
-        void Read(string id);
+        Managers Read(string id);
         void Update(Managers manager,string id);
         void Delete(string id);
         IQueryable<Managers> ReadAll();
@@ -19,7 +19,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         IQueryable<Managers> GetAllManagersWithDoctorateWithouthMba();
         Managers GetLongestWorkingManager();
         Managers GetLongestWorkingManagerComparedToHisAge();
-        MbaRateDto GetRateOfManagersWithMbaAndWithout();
+        void GetRateOfManagersWithMbaAndWithout();
         
     }
 }
