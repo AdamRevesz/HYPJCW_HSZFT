@@ -217,7 +217,16 @@ namespace HYPJCW_HSZFT.Logic
 
         public Employees GetActiveEmployeeLeastProjects()
         {
-            throw new NotImplementedException();
+            var everyEmployee = employeeRepo.ReadAll();
+            var employee = everyEmployee
+                .Where(e => e.Active)
+                .OrderBy(e => e.CompletedProjects)
+                .FirstOrDefault();
+            if(employee is null)
+            {
+                throw new ArgumentException();
+            }
+            return employee;
         }
 
         public IQueryable<Employees> GetEmployeeWithHigherCommissionThanOthersSalary()
