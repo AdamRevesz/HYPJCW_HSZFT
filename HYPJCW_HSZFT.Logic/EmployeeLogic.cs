@@ -252,8 +252,8 @@ namespace HYPJCW_HSZFT.Logic
                 .ToList();
 
             return (
-                EmployeeWithLowerSalary: employeesWithLowestSalary,
-                EmployeeWithHigherCommission: employeesWithHigherCommission
+                EmployeesWithLowerSalary: employeesWithLowestSalary,
+                EmployeesWithHigherCommission: employeesWithHigherCommission
                 );
         }
     }
