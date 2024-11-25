@@ -45,7 +45,7 @@ namespace HYPJCW_HSZFT.Logic
                     name: element.GetProperty("Name").GetString() ?? "Unknown",
                     managerId: element.GetProperty("ManagerId").GetString() ?? "N/A",
                     birthYear: element.GetProperty("BirthYear").GetInt32(),
-                    startOfEmployment: element.GetProperty("StartOfEmployment").GetString() ?? "Unknown",
+                    startOfEmployment: DateTime.Parse(element.GetProperty("StartOfEmployment").GetString() ?? "0000-00-00"),
                     hasMBA: element.GetProperty("HasMBA").GetBoolean()
                 );
                 if (manager.HasMba)
@@ -91,8 +91,8 @@ namespace HYPJCW_HSZFT.Logic
                 {
                     EmployeeId = element.Attribute("employeeid")?.Value ?? "0",
                     Name = element.Element("Name")?.Value ?? "Null",
-                    BirthYear = int.Parse(element.Element("BirthYear")?.Value ?? "0000"),
-                    StartYear = int.Parse(element.Element("StartYear")?.Value ?? "0000"),
+                    BirthYear = DateTime.Parse(element.Element("BirthYear")?.Value ?? "0000-00-00"),
+                    StartYear = DateTime.Parse(element.Element("StartYear")?.Value ?? "0000-00-00"),
                     CompletedProjects = int.Parse(element.Element("CompletedProjects")?.Value ?? "0"),
                     Active = bool.Parse(element.Element("Active")?.Value ?? "false"),
                     Retired = bool.Parse(element.Element("Retired")?.Value ?? "false"),

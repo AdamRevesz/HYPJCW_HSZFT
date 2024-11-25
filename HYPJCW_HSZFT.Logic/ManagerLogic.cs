@@ -47,7 +47,18 @@ namespace HYPJCW_HSZFT.Logic
 
         public Managers GetLongestWorkingManager()
         {
-            throw new NotImplementedException();
+            var everyManager = managerRepo.ReadAll();
+
+            var longestWorkingManager = everyManager
+                .OrderByDescending(m => (DateTime.Now.Year - m.StartOfEmployment.Year))
+                .FirstOrDefault();
+
+            if(longestWorkingManager is null)
+            {
+                throw new Exception();
+            }
+            return longestWorkingManager;
+                
         }
 
         public Managers GetLongestWorkingManagerComparedToHisAge()

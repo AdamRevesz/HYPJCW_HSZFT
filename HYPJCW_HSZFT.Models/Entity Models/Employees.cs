@@ -21,8 +21,8 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
 
         [StringLength(200)]
         public string Name { get; set; }
-        public int BirthYear { get; set; }
-        public int StartYear { get; set; }
+        public DateTime BirthYear { get; set; }
+        public DateTime StartYear { get; set; }
         public int CompletedProjects { get; set; }
         public bool Active { get; set; }
         public bool Retired { get; set; }
@@ -35,7 +35,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public virtual ICollection<Departments> Departments { get; set; }
 
         public Employees(
-            string employeeId, string name, int birthYear, int startYear,
+            string employeeId, string name, DateTime birthYear, DateTime startYear,
             int completedProjects, bool active, bool retired, string email, string phone,
             string job, string level, int salary, string commission, ICollection<Departments> departments)
         {

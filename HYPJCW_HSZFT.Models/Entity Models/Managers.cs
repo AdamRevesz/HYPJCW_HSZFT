@@ -13,14 +13,14 @@ namespace HYPJCW_HSZFT.Models.Entity_Models
         [Key]
         public string ManagerId { get; set; }
         public int BirthYear { get; set; }
-        public string StartOfEmployment { get; set; }
+        public DateTime StartOfEmployment { get; set; }
         public bool HasMba { get; set; }
         public Managers()
         {
             
         }
 
-        public Managers(string name, string managerId, int birthYear, string startOfEmployment, bool hasMBA)
+        public Managers(string name, string managerId, int birthYear, DateTime startOfEmployment, bool hasMBA)
         {
             Name = name;
             ManagerId = managerId;
