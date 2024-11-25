@@ -23,7 +23,29 @@ namespace HYPJCW_HSZFT.Logic
 
         public void Create(Managers manager)
         {
-            throw new NotImplementedException();
+            var everyManager = managerRepo.ReadAll();
+             if (manager is null)
+            {
+                throw new ArgumentException("Manager is null");
+            }
+
+            var lastId = everyManager
+                .OrderByDescending(m => m.ManagerId)
+                .Select(m => m.ManagerId)
+                .FirstOrDefault();
+
+            if (lastId != null && lastId.StartsWith("MGR"))
+            {
+                var numericPart = int.Parse(lastId.Substring(3));
+                var newId = $"MGR{numericPart + 1:D3}";
+                manager.ManagerId = newId;
+            }
+            else
+            {
+                manager.ManagerId = "MGR001";
+            }
+
+            managerRepo.Create(manager);
         }
 
         public void Delete(string id)

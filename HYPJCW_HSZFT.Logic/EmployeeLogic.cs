@@ -1,6 +1,7 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
 using HYPJCW_HSZFT.Logic.Interfaces;
 using HYPJCW_HSZFT.Models.DTOs;
+using HYPJCW_HSZFT.Models.Entity_Models;
 using HYPJCW_HSZFT.Repository;
 using System;
 using System.Collections.Generic;
@@ -255,6 +256,54 @@ namespace HYPJCW_HSZFT.Logic
                 EmployeesWithLowerSalary: employeesWithLowestSalary,
                 EmployeesWithHigherCommission: employeesWithHigherCommission
                 );
+        }
+
+        public void Create(Employees item)
+        {
+            var everyEmployee = employeeRepo.ReadAll();
+            if (item is null)
+            {
+                throw new ArgumentException("Manager is null");
+            }
+
+            var lastId = everyEmployee
+                .OrderByDescending(m => m.EmployeeId)
+                .Select(m => m.EmployeeId)
+                .FirstOrDefault();
+
+            if (lastId != null && lastId.StartsWith("EMP"))
+            {
+                var numericPart = int.Parse(lastId.Substring(3));
+                var newId = $"EMP{numericPart + 1:D3}";
+                item.EmployeeId = newId;
+            }
+            else
+            {
+                item.EmployeeId = "EMP001";
+            }
+
+            employeeRepo.Create(item);
+        }
+
+        public Employees Read(string id)
+        {
+            var employee = employeeRepo.Read(id);
+            if(employee is null)
+            {
+                throw new ArgumentException("Employee not found");
+            }
+            return employee;
+        }
+
+        public void Update(Employees item, string id)
+        {
+            item.EmployeeId = id;
+            employeeRepo.Update(item);
+        }
+
+        public void Delete(string id)
+        {
+            employeeRepo.Delete(id);
         }
     }
 }

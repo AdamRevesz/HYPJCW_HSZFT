@@ -10,11 +10,11 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
 {
     public interface IEmployeesLogic
     {
-        void Create(Employees item) { }
-        void Read(string id) { }
-        void Update(Employees item, string id) { }
+        void Create(Employees item);
+        Employees Read(string id);
+        void Update(Employees item, string id);
         IQueryable<Employees> ReadAll();
-        void Delete(string id) { }
+        void Delete(string id);
 
         IQueryable<Employees> GetEmployeesBornInThe80();
         IQueryable<Employees> GetEmployeesAtleastWorkingInTwoDepartments();
