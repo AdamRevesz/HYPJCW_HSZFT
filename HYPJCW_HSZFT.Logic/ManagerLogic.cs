@@ -28,7 +28,7 @@ namespace HYPJCW_HSZFT.Logic
 
         public void Delete(string id)
         {
-            throw new NotImplementedException();
+            managerRepo.Delete(id);
         }
 
         public IQueryable<Managers> GetAllManagersWithDoctorateWithouthMba()
@@ -112,7 +112,12 @@ namespace HYPJCW_HSZFT.Logic
 
         public Managers Read(string id)
         {
-            throw new NotImplementedException();
+            var manager = managerRepo.Read(id);
+            if(manager is null)
+            {
+                throw new ArgumentException("Manager does not exist");
+            }
+            return manager;
         }
 
         public IQueryable<Managers> ReadAll()
@@ -122,7 +127,8 @@ namespace HYPJCW_HSZFT.Logic
 
         public void Update(Managers manager, string id)
         {
-            throw new NotImplementedException();
+            manager.ManagerId = id;
+            managerRepo.Update(manager);
         }
     }
 }
