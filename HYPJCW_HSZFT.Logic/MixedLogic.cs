@@ -36,9 +36,28 @@ namespace HYPJCW_HSZFT.Logic
 
         }
 
-        public void WhoAreManagersOrDepartmentManagers()
+        public (List<Managers> Managers, List<Managers> DepartmentManagers) WhoAreManagersOrDepartmentManagers()
         {
-            throw new NotImplementedException();
+            var everymanager = managerRepo.ReadAll();
+            var departmens = departmentRepo.ReadAll();
+
+            var headsOfDepartments = departmens
+                .Select(d => d.HeadOfDepartment)
+                .ToList();
+
+            var departmentManagers = everymanager
+                .Where(m => headsOfDepartments.Contains(m.Name))
+                .ToList();
+
+            var onlyManagers = everymanager
+                .Where(m => !headsOfDepartments.Contains(m.Name))
+                .ToList();
+
+            return
+                (
+                onlyManagers,
+                departmentManagers
+                );
         }
 
         public (string Name, int YearsWorked) WhoWorksForTheLongest()

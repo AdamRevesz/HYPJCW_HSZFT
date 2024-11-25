@@ -12,6 +12,6 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
     {
         (string Name, int YearsWorked) WhoWorksForTheLongest();
         List<Managers> IsThereManagerWhoIsDepartmentManager();
-        void WhoAreManagersOrDepartmentManagers();
+        (List<Managers> Managers, List<Managers> DepartmentManagers) WhoAreManagersOrDepartmentManagers();
     }
 }
