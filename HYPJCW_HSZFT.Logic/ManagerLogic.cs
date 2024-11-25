@@ -79,7 +79,10 @@ namespace HYPJCW_HSZFT.Logic
 
         public IQueryable<Managers> GetManagersWithDoctorate()
         {
-            throw new NotImplementedException();
+            var everyManager = managerRepo.ReadAll();
+            return everyManager
+                .Where(m => m.Name.ToLower().Contains("Dr%%"));
+
         }
 
         public MbaRateDto GetRateOfManagersWithMbaAndWithout()
