@@ -200,7 +200,7 @@ namespace HYPJCW_HSZFT.Logic
                 .OrderBy(e => e.CompletedProjects / (DateTime.Now.Year - e.StartYear + 1)) //+1 to prevent calculating with zero
                 .FirstOrDefault();
 
-            if(employeLeast is null)
+            if (employeLeast is null)
             {
                 throw new ArgumentException();
             }
@@ -222,16 +222,39 @@ namespace HYPJCW_HSZFT.Logic
                 .Where(e => e.Active)
                 .OrderBy(e => e.CompletedProjects)
                 .FirstOrDefault();
-            if(employee is null)
+            if (employee is null)
             {
                 throw new ArgumentException();
             }
             return employee;
         }
 
-        public IQueryable<Employees> GetEmployeeWithHigherCommissionThanOthersSalary()
+        public (List<Employees>? EmployeesWithHigherCommission, List<Employees>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary()
         {
-            throw new NotImplementedException();
+            var everyEmployee = GetWorkersDescSalaryWithCommission();
+
+            if (!everyEmployee.Any())
+            {
+                throw new ArgumentException("No employees found.");
+            }
+
+            var maxSalary = everyEmployee.Max(e => e.Salary);
+            var maxCommisison = everyEmployee.Max(e => int.Parse(e.Commission));
+
+            // Find the employee with the higher commission
+            var employeesWithHigherCommission = everyEmployee
+                .Where(e => int.Parse(e.Commission) > maxSalary)
+                .ToList();
+
+            // Find the employees with lower salary
+            var employeesWithLowestSalary = everyEmployee
+                .Where(e => e.Salary < maxCommisison)
+                .ToList();
+
+            return (
+                EmployeeWithLowerSalary: employeesWithLowestSalary,
+                EmployeeWithHigherCommission: employeesWithHigherCommission
+                );
         }
     }
 }

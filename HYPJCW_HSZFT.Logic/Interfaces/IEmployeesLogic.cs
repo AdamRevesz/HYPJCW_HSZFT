@@ -31,7 +31,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         Employees GetEmployeeWithLeastProjectsBasedOnYearsWorked();
         IQueryable<Employees> GetSalaryOfEmployeesBasedOnBirthYear();
         Employees GetActiveEmployeeLeastProjects();
-        IQueryable<Employees> GetEmployeeWithHigherCommissionThanOthersSalary();
-        
+        (List<Employees>? EmployeesWithHigherCommission, List<Employees>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary();
+
     }
 }
