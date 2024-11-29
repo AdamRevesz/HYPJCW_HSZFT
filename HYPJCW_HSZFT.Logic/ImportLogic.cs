@@ -30,13 +30,14 @@ namespace HYPJCW_HSZFT.Logic
             return jsDoc;
         }
 
-        public static List<Managers> GetManagersJson(JsonDocument jsDoc)
+        public static async Task GetManagersJson(string url)
         {
             List<Managers> managers = new List<Managers>();
 
-            // Navigate to the root JSON element and select the "Employee" elements
-            var root = jsDoc.RootElement;
-            var managerElements = jsDoc.RootElement.EnumerateArray();
+            // Fetch the JSON content
+            JsonDocument raw = await ImportJsFromUrl(url);
+            var root = raw.RootElement;
+            var managerElements = root.EnumerateArray();
             MbaRateDto rate = new MbaRateDto();
 
             foreach (var element in managerElements)
@@ -60,7 +61,6 @@ namespace HYPJCW_HSZFT.Logic
                 managers.Add(manager);
             }
 
-            return managers;
         }
 
 
@@ -81,9 +81,11 @@ namespace HYPJCW_HSZFT.Logic
 
         }
 
-        public static List<Employees> GetEmployeesXml(XDocument xDoc)
+        public static async Task GetEmployeesXml(string url)
         {
-            List<Employees> employees = new List<Employees>();
+
+            // Fetch the XML content
+            XDocument xDoc = await ImportXmlFromUrl(url);
 
             foreach (var element in xDoc.Descendants("Employee"))
             {
@@ -102,25 +104,24 @@ namespace HYPJCW_HSZFT.Logic
                     Level = element.Element("Level")?.Value ?? "null",
                     Salary = int.Parse(element.Element("Salary")?.Value ?? "0"),
                     Commission = element.Element("Commission")?.Attribute("currency") != null
-                     ? $"{element.Element("Commission")?.Attribute("currency")?.Value?? null} {element.Element("Commission")?.Value}"
-                     : element.Element("Commission")?.Value ?? "0",
+                        ? $"{element.Element("Commission")?.Attribute("currency")?.Value ?? null} {element.Element("Commission")?.Value}"
+                        : element.Element("Commission")?.Value ?? "0",
                     Departments = element.Element("Departments")?
-                     .Elements("Department")?
-                     .Select(dept => new Departments(
-                      dept.Element("Name")?.Value ?? "Unknown",
-                      dept.Element("DepartmentCode")?.Value ?? "000",
-                      dept.Element("HeadOfDepartment")?.Value ?? "Unknown"))
-                     .ToList() ?? new List<Departments>()
+                        .Elements("Department")?
+                        .Select(dept => new Departments(
+                            dept.Element("Name")?.Value ?? "Unknown",
+                            dept.Element("DepartmentCode")?.Value ?? "000",
+                            dept.Element("HeadOfDepartment")?.Value ?? "Unknown"))
+                        .ToList() ?? new List<Departments>()
                 };
 
-
-                employees.Add(employee);
+                EmployeeLogic.Create(employee);
             }
 
-            return employees;
         }
 
     }
+
 }
 
 

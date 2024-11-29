@@ -24,10 +24,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\HYPJCW_HSZFT.Logic\HYPJCW_HSZFT.Logic.csproj" />
   </ItemGroup>
 
