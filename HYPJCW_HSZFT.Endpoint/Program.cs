@@ -17,11 +17,15 @@ namespace HYPJCW_HSZFT.Endpoint
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddTransient<IRepository<Employees>, EmployeeRepository>();
+            builder.Services.AddTransient<IRepository<Managers>, ManagersRepository>();
+            builder.Services.AddTransient<IRepository<Departments>, DepartmentsRepository>();
             builder.Services.AddScoped<IEmployeesLogic, EmployeeLogic>();
-            builder.Services.AddScoped<IEmployeesLogic, EmployeeLogic>();
-            builder.Services.AddScoped<IRepository<Employees>, Repository<Employees>>();
-            builder.Services.AddScoped<IRepository<Managers>, Repository<Managers>>();
-            builder.Services.AddScoped<IRepository<Departments>, Repository<Departments>>();
+            builder.Services.AddScoped<IManagerLogic, ManagerLogic>();
+            builder.Services.AddScoped<IMixedLogic, MixedLogic>();
+            builder.Services.AddScoped<IImportLogic, ImportLogic>();
+
+
             builder.Services.AddDbContext<MainDbContext>(options =>
             {
                 options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=HSZFT;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");

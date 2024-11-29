@@ -10,21 +10,31 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
     public class ImportController : ControllerBase
 
     {
-        IImportLogic logic;
+        private readonly IImportLogic _logic;
 
         public ImportController(IImportLogic logic)
         {
-            this.logic = logic;
+            _logic = logic;
         }
 
-        [HttpPost("/import/importjsurl")]
+        [HttpPost("/import/importjs")]
         public async Task ImportManagersFromJs(string url)
         {
             if(url is null)
             {
                 throw new ArgumentException("The url is invalid");
             }
-            this.logic.GetManagersJson(url);
+            await _logic.GetManagersJson(url);
+        }
+
+        [HttpPost("/import/importxml")]
+        public async Task ImportEmployeesFromXML(string url)
+        {
+            if (url is null)
+            {
+                throw new ArgumentException("The url is invalid");
+            }
+            await _logic.GetEmployeesXml(url);
         }
     }
 }

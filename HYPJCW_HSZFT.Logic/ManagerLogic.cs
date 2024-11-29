@@ -72,7 +72,7 @@ namespace HYPJCW_HSZFT.Logic
             var everyManager = managerRepo.ReadAll();
 
             var longestWorkingManager = everyManager
-                .OrderByDescending(m => (DateTime.Now.Year - m.StartOfEmployment.Year))
+                .OrderByDescending(m => (DateTime.Now.Year - DateTime.Parse(m.StartOfEmployment).Year))
                 .FirstOrDefault();
 
             if(longestWorkingManager is null)
@@ -88,7 +88,7 @@ namespace HYPJCW_HSZFT.Logic
             var everyManager = managerRepo.ReadAll();
 
             var managerForAge = everyManager
-                .OrderBy(m => (DateTime.Now.Year - m.BirthYear.Year) - m.StartOfEmployment.Year)
+                .OrderBy(m => (DateTime.Now.Year - m.BirthYear) - DateTime.Parse(m.StartOfEmployment).Year)
                 .FirstOrDefault();
 
             if(managerForAge is null)

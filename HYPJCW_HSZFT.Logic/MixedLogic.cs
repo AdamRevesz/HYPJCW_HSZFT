@@ -69,7 +69,7 @@ namespace HYPJCW_HSZFT.Logic
                 .Select(e => new
                 {
                     Name = e.Name,
-                    YearsWorked = DateTime.Now.Year - e.StartYear.Year
+                    YearsWorked = DateTime.Now.Year - e.StartYear
                 })
                 .OrderByDescending(e => e.YearsWorked)
                 .FirstOrDefault();
@@ -78,7 +78,7 @@ namespace HYPJCW_HSZFT.Logic
                 .Select(m => new
                 {
                     Name = m.Name,
-                    YearsWorked = DateTime.Now.Year - m.StartOfEmployment.Year
+                    YearsWorked = DateTime.Now.Year - DateTime.Parse(m.StartOfEmployment).Year
                 })
                 .OrderByDescending(m => m.YearsWorked)
                 .FirstOrDefault();

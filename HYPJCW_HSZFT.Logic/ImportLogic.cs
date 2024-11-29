@@ -1,6 +1,8 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
+using HYPJCW_HSZFT.Logic.Interfaces;
 using HYPJCW_HSZFT.Models.DTOs;
 using HYPJCW_HSZFT.Models.Entity_Models;
+using HYPJCW_HSZFT.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +15,20 @@ using System.Xml.Serialization;
 
 namespace HYPJCW_HSZFT.Logic
 {
-    public class ImportLogic
+    public class ImportLogic : IImportLogic
     {
-        public static async Task<JsonDocument> ImportJsFromUrl(string url)
+        private readonly IRepository<Managers> _managerRepo;
+        private readonly IRepository<Employees> _employeeRepo;
+        private readonly IRepository<Departments> _departmentRepo;
+
+        public ImportLogic(IRepository<Managers> repo1, IRepository<Employees> repo2, IRepository<Departments> repo3)
+        {
+            _employeeRepo = repo2;
+            _managerRepo = repo1;
+            _departmentRepo = repo3;
+        }
+
+        public async Task<JsonDocument> ImportJsFromUrl(string url)
         {
             using HttpClient client = new HttpClient();
 
@@ -30,9 +43,8 @@ namespace HYPJCW_HSZFT.Logic
             return jsDoc;
         }
 
-        public static async Task GetManagersJson(string url)
+        public async Task GetManagersJson(string url)
         {
-            List<Managers> managers = new List<Managers>();
 
             // Fetch the JSON content
             JsonDocument raw = await ImportJsFromUrl(url);
@@ -45,8 +57,8 @@ namespace HYPJCW_HSZFT.Logic
                 Managers manager = new Managers(
                     name: element.GetProperty("Name").GetString() ?? "Unknown",
                     managerId: element.GetProperty("ManagerId").GetString() ?? "N/A",
-                    birthYear: DateTime.Parse(element.GetProperty("BirthYear").GetString() ?? "0000-00-00"),
-                    startOfEmployment: DateTime.Parse(element.GetProperty("StartOfEmployment").GetString() ?? "0000-00-00"),
+                    birthYear: element.GetProperty("BirthYear").GetInt32(),
+                    startOfEmployment: element.GetProperty("StartOfEmployment").GetString() ?? "0000-00-00",
                     hasMBA: element.GetProperty("HasMBA").GetBoolean()
                 );
                 if (manager.HasMba)
@@ -58,14 +70,14 @@ namespace HYPJCW_HSZFT.Logic
                     rate.WithoutMba++;
                 }
 
-                managers.Add(manager);
+                _managerRepo.Create(manager);
             }
 
         }
 
 
 
-        public static async Task<XDocument> ImportXmlFromUrl(string url)
+        public async Task<XDocument> ImportXmlFromUrl(string url)
         {
             using HttpClient client = new HttpClient();
 
@@ -81,7 +93,7 @@ namespace HYPJCW_HSZFT.Logic
 
         }
 
-        public static async Task GetEmployeesXml(string url)
+        public async Task GetEmployeesXml(string url)
         {
 
             // Fetch the XML content
@@ -89,12 +101,35 @@ namespace HYPJCW_HSZFT.Logic
 
             foreach (var element in xDoc.Descendants("Employee"))
             {
+                var departments = element.Element("Departments")?
+                    .Elements("Department")?
+                    .Select(dept => new Departments(
+                        dept.Element("Name")?.Value ?? "Unknown",
+                        dept.Element("DepartmentCode")?.Value ?? "000",
+                        dept.Element("HeadOfDepartment")?.Value ?? "Unknown"))
+                    .ToList() ?? new List<Departments>();
+
+                foreach (var department in departments)
+                {
+                    var existingDepartment = _departmentRepo.ReadAll()
+                        .FirstOrDefault(d => d.DepartmentCode == department.DepartmentCode);
+
+                    if (existingDepartment != null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        _departmentRepo.Create(department);
+                    }
+                }
+
                 Employees employee = new Employees
                 {
                     EmployeeId = element.Attribute("employeeid")?.Value ?? "0",
                     Name = element.Element("Name")?.Value ?? "Null",
-                    BirthYear = DateTime.Parse(element.Element("BirthYear")?.Value ?? "0000-00-00"),
-                    StartYear = DateTime.Parse(element.Element("StartYear")?.Value ?? "0000-00-00"),
+                    BirthYear = int.Parse(element.Element("BirthYear")?.Value),
+                    StartYear = int.Parse(element.Element("StartYear")?.Value),
                     CompletedProjects = int.Parse(element.Element("CompletedProjects")?.Value ?? "0"),
                     Active = bool.Parse(element.Element("Active")?.Value ?? "false"),
                     Retired = bool.Parse(element.Element("Retired")?.Value ?? "false"),
@@ -106,16 +141,10 @@ namespace HYPJCW_HSZFT.Logic
                     Commission = element.Element("Commission")?.Attribute("currency") != null
                         ? $"{element.Element("Commission")?.Attribute("currency")?.Value ?? null} {element.Element("Commission")?.Value}"
                         : element.Element("Commission")?.Value ?? "0",
-                    Departments = element.Element("Departments")?
-                        .Elements("Department")?
-                        .Select(dept => new Departments(
-                            dept.Element("Name")?.Value ?? "Unknown",
-                            dept.Element("DepartmentCode")?.Value ?? "000",
-                            dept.Element("HeadOfDepartment")?.Value ?? "Unknown"))
-                        .ToList() ?? new List<Departments>()
+                    Departments = departments
                 };
 
-                EmployeeLogic.Create(employee);
+                _employeeRepo.Create(employee);
             }
 
         }

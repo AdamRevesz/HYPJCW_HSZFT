@@ -12,9 +12,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
 {
     public interface IImportLogic
     {
-        Task<JsonDocument> ImportJsFromUrl(string url);
-        List<Managers> GetManagersJson(string url);
-        Task<XDocument> ImportXmlFromUrl(string url);
-        List<Employees> GetEmployeesXml(string url);
+        public Task GetManagersJson(string url);
+        public Task GetEmployeesXml(string url);
     }
 }

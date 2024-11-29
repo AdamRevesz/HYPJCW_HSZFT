@@ -89,7 +89,7 @@ namespace HYPJCW_HSZFT.Logic
         public IQueryable<Employees> GetEmployeesBornInThe80()
         {
             var everyEmployee = employeeRepo.ReadAll();
-            return everyEmployee.Where(p => p.BirthYear.Year >= 1980 && p.BirthYear.Year <= 1989);
+            return everyEmployee.Where(p => p.BirthYear >= 1980 && p.BirthYear <= 1989);
         }
 
         public IQueryable<Employees> GetEmployeesAtleastWorkingInTwoDepartments()
@@ -198,7 +198,7 @@ namespace HYPJCW_HSZFT.Logic
         {
             var everyEmployee = employeeRepo.ReadAll();
             var employeLeast = everyEmployee
-                .OrderBy(e => e.CompletedProjects / (DateTime.Now.Year - e.StartYear.Year + 1)) //+1 to prevent calculating with zero
+                .OrderBy(e => e.CompletedProjects / (DateTime.Now.Year - e.StartYear + 1)) //+1 to prevent calculating with zero
                 .FirstOrDefault();
 
             if (employeLeast is null)

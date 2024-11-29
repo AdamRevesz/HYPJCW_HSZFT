@@ -12,15 +12,15 @@ namespace HYPJCW_HSZFT.Models.Entity_Models
         public string Name { get; set; }
         [Key]
         public string ManagerId { get; set; }
-        public DateTime BirthYear { get; set; }
-        public DateTime StartOfEmployment { get; set; }
+        public int BirthYear { get; set; }
+        public string StartOfEmployment { get; set; }
         public bool HasMba { get; set; }
         public Managers()
         {
             
         }
 
-        public Managers(string name, string managerId, DateTime birthYear, DateTime startOfEmployment, bool hasMBA)
+        public Managers(string name, string managerId, int birthYear, string startOfEmployment, bool hasMBA)
         {
             Name = name;
             ManagerId = managerId;
