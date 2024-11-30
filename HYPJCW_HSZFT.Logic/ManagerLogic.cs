@@ -53,12 +53,12 @@ namespace HYPJCW_HSZFT.Logic
             managerRepo.Delete(id);
         }
 
-        public IQueryable<Managers> GetAllManagersWithDoctorateWithouthMba()
+        public List<Managers> GetAllManagersWithDoctorateWithouthMba()
         {
             var everyManager = managerRepo.ReadAll();
 
             var doctorateManagers = everyManager
-                .Where(m => m.Name.ToLower().Contains("dr.%%") && !m.HasMba);
+                .Where(m => m.Name.ToLower().Contains("dr.%%") && !m.HasMba).ToList();
 
             if(doctorateManagers is null)
             {
@@ -99,11 +99,11 @@ namespace HYPJCW_HSZFT.Logic
                 
         }
 
-        public IQueryable<Managers> GetManagersWithDoctorate()
+        public List<Managers> GetManagersWithDoctorate()
         {
             var everyManager = managerRepo.ReadAll();
             return everyManager
-                .Where(m => m.Name.ToLower().Contains("Dr%%"));
+                .Where(m => m.Name.ToLower().Contains("Dr%%")).ToList();
         }
 
         public void GetRateOfManagersWithMbaAndWithout()
@@ -142,9 +142,9 @@ namespace HYPJCW_HSZFT.Logic
             return manager;
         }
 
-        public IQueryable<Managers> ReadAll()
+        public List<Managers> ReadAll()
         {
-            return managerRepo.ReadAll();
+            return managerRepo.ReadAll().ToList();
         }
 
         public void Update(Managers manager, string id)

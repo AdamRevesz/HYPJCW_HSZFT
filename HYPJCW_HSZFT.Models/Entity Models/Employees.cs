@@ -52,7 +52,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             Level = level;
             Salary = salary;
             Commission = commission;
-            Departments = departments ?? new List<Departments>(); // Initialize with empty list if null
+            this.Departments = new HashSet<Departments>(); // Initialize with empty list if null
         }
         public Employees() { }
 

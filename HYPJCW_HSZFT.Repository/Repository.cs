@@ -27,9 +27,9 @@ namespace HYPJCW_HSZFT.Repository
             ctx.Set<T>().Remove(Read(id));
             ctx.SaveChanges();
         }
-        public IQueryable<T> ReadAll()
+        public List<T> ReadAll()
         {
-            return ctx.Set<T>();
+            return ctx.Set<T>().ToList();
         }
 
         public abstract T Read(string id);

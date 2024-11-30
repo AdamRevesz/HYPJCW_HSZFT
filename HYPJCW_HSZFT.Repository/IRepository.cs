@@ -8,7 +8,7 @@ namespace HYPJCW_HSZFT.Repository
 {
         public interface IRepository<T> where T : class
         {
-            IQueryable<T> ReadAll();
+            List<T> ReadAll();
             T Read(string id);
             void Create(T item);
             void Update(T item);

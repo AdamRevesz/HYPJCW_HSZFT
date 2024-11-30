@@ -14,9 +14,9 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         Managers Read(string id);
         void Update(Managers manager,string id);
         void Delete(string id);
-        IQueryable<Managers> ReadAll();
-        IQueryable<Managers> GetManagersWithDoctorate();
-        IQueryable<Managers> GetAllManagersWithDoctorateWithouthMba();
+        List<Managers> ReadAll();
+        List<Managers> GetManagersWithDoctorate();
+        List<Managers> GetAllManagersWithDoctorateWithouthMba();
         Managers GetLongestWorkingManager();
         Managers GetLongestWorkingManagerComparedToHisAge();
         void GetRateOfManagersWithMbaAndWithout();

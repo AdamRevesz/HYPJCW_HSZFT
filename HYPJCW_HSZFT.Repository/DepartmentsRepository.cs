@@ -37,5 +37,10 @@ namespace HYPJCW_HSZFT.Repository
             }
             ctx.SaveChanges();
         }
+
+        public List<Departments> ReadAll()
+        {
+            return ctx.Departments.ToList();
+        }
     }
 }

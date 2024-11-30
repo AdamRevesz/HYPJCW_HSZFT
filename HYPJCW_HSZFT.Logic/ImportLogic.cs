@@ -101,29 +101,38 @@ namespace HYPJCW_HSZFT.Logic
 
             foreach (var element in xDoc.Descendants("Employee"))
             {
-                var departments = element.Element("Departments")?
+                var departmentElements = element.Element("Departments")?
                     .Elements("Department")?
-                    .Select(dept => new Departments(
-                        dept.Element("Name")?.Value ?? "Unknown",
-                        dept.Element("DepartmentCode")?.Value ?? "000",
-                        dept.Element("HeadOfDepartment")?.Value ?? "Unknown"))
-                    .ToList() ?? new List<Departments>();
+                    .ToList() ?? new List<XElement>();
 
-                foreach (var department in departments)
+                var departments = new List<Departments>();
+
+                foreach (var deptElement in departmentElements)
                 {
+                    var departmentCode = deptElement.Element("DepartmentCode")?.Value ?? "000";
+
+                    // Try to get the existing department from the repository
                     var existingDepartment = _departmentRepo.ReadAll()
-                        .FirstOrDefault(d => d.DepartmentCode == department.DepartmentCode);
+                        .FirstOrDefault(d => d.DepartmentCode == departmentCode);
 
                     if (existingDepartment != null)
                     {
-                        continue;
+                        departments.Add(existingDepartment);
                     }
                     else
                     {
-                        _departmentRepo.Create(department);
+                        // Create a new department and add it to the repository
+                        var newDepartment = new Departments(
+                            name: deptElement.Element("Name")?.Value ?? "Unknown",
+                            departmentCode: departmentCode,
+                            headOfDepartment: deptElement.Element("HeadOfDepartment")?.Value ?? "Unknown");
+
+                        _departmentRepo.Create(newDepartment);
+                        departments.Add(newDepartment);
                     }
                 }
 
+                // Create the employee and assign the departments
                 Employees employee = new Employees
                 {
                     EmployeeId = element.Attribute("employeeid")?.Value ?? "0",
@@ -139,7 +148,7 @@ namespace HYPJCW_HSZFT.Logic
                     Level = element.Element("Level")?.Value ?? "null",
                     Salary = int.Parse(element.Element("Salary")?.Value ?? "0"),
                     Commission = element.Element("Commission")?.Attribute("currency") != null
-                        ? $"{element.Element("Commission")?.Attribute("currency")?.Value ?? null} {element.Element("Commission")?.Value}"
+                        ? $"{element.Element("Commission")?.Attribute("currency")?.Value} {element.Element("Commission")?.Value}"
                         : element.Element("Commission")?.Value ?? "0",
                     Departments = departments
                 };
@@ -148,9 +157,7 @@ namespace HYPJCW_HSZFT.Logic
             }
 
         }
-
     }
-
 }
 
 

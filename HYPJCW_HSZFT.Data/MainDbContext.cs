@@ -16,7 +16,7 @@ namespace HYPJCW_HSZFT.Data
 
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
-
+            ChangeTracker.LazyLoadingEnabled = false;
         }
 
         protected override void OnModelCreating(ModelBuilder mod)

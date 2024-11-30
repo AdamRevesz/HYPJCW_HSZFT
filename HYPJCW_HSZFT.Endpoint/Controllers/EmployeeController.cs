@@ -1,16 +1,17 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
 using HYPJCW_HSZFT.Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace HYPJCW_HSZFT.Endpoint.Controllers
 {
     [Route("/api")]
     [ApiController]
-    public class HomeController : Controller
+    public class EmployeeController : Controller
     {
         IEmployeesLogic logic;
 
-        public HomeController(IEmployeesLogic logic)
+        public EmployeeController(IEmployeesLogic logic)
         {
             this.logic = logic;
         }
@@ -33,9 +34,9 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees")]
-        public IQueryable<Employees> ReadAll()
+        public List<Employees> ReadAll()
         {
-            return this.logic.ReadAll();
+            return this.logic.ReadAll().ToList();
         }
 
         [HttpPut("/Employee/{employeeId}")]
@@ -57,25 +58,25 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/borninthe80s")]
-        public IQueryable<Employees> EmployeesBornIn80()
+        public List<Employees> EmployeesBornIn80()
         {
             return this.logic.GetEmployeesBornInThe80();
         }
 
         [HttpGet("/Employees/employeesworkingatleast2departments")]
-        public IQueryable<Employees> EmployeesWorkingMultipleDepartments()
+        public List<Employees> EmployeesWorkingMultipleDepartments()
         {
             return this.logic.GetEmployeesAtleastWorkingInTwoDepartments();
         }
 
         [HttpGet("/Employees/employeesworkingbutpension")]
-        public IQueryable<Employees> EmployeesWorkingButPension()
+        public List<Employees> EmployeesWorkingButPension()
         {
             return this.logic.GetEmployeesWorkingButPension();
         }
 
         [HttpGet("/Employees/employeesonepension")]
-        public IQueryable<Employees> EmployeesOnPension()
+        public List<Employees> EmployeesOnPension()
         {
             return this.logic.GetEmployeesOnPension();
         }
@@ -93,7 +94,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/employeeswithdrmanagers")]
-        public IQueryable<Employees> EmployeesWithDoctorManager()
+        public List<Employees> EmployeesWithDoctorManager()
         {
             return this.logic.GetEmployeesOfDepartmentWithDoctorateManager();
         }
@@ -123,7 +124,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/salaryofemployeesbirthyear")]
-        public IQueryable<Employees> SalaryOfEmployeesBirthYear()
+        public List<Employees> SalaryOfEmployeesBirthYear()
         {
             return this.logic.GetSalaryOfEmployeesBasedOnBirthYear();
         }

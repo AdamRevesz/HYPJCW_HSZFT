@@ -20,9 +20,9 @@ namespace HYPJCW_HSZFT.Logic
         {
             employeeRepo = repo;
         }
-        public IQueryable<Employees> ReadAll()
+        public List<Employees> ReadAll()
         {
-            return employeeRepo.ReadAll();
+            return employeeRepo.ReadAll().ToList();
         }
 
         public void GetRatesOfEmployeeLevels()
@@ -86,28 +86,28 @@ namespace HYPJCW_HSZFT.Logic
             return rate;
         }
 
-        public IQueryable<Employees> GetEmployeesBornInThe80()
+        public List<Employees> GetEmployeesBornInThe80()
         {
             var everyEmployee = employeeRepo.ReadAll();
-            return everyEmployee.Where(p => p.BirthYear >= 1980 && p.BirthYear <= 1989);
+            return everyEmployee.Where(p => p.BirthYear >= 1980 && p.BirthYear <= 1989).ToList();
         }
 
-        public IQueryable<Employees> GetEmployeesAtleastWorkingInTwoDepartments()
+        public List<Employees> GetEmployeesAtleastWorkingInTwoDepartments()
         {
             var everyEployee = employeeRepo.ReadAll();
-            return everyEployee.Where(e => e.Departments.Count >= 2);
+            return everyEployee.Where(e => e.Departments != null && e.Departments.Count >= 2).ToList();
         }
 
-        public IQueryable<Employees> GetEmployeesWorkingButPension()
+        public List<Employees> GetEmployeesWorkingButPension()
         {
             var everyEmployee = employeeRepo.ReadAll();
-            return everyEmployee.Where(e => e.Retired && e.Active);
+            return everyEmployee.Where(e => e.Retired && e.Active).ToList(); ;
         }
 
-        public IQueryable<Employees> GetEmployeesOnPension()
+        public List<Employees> GetEmployeesOnPension()
         {
             var everyEmployee = employeeRepo.ReadAll();
-            return everyEmployee.Where(e => e.Retired && !e.Active);
+            return everyEmployee.Where(e => e.Retired && !e.Active).ToList();
         }
 
         public double GetAverageOfSalaryOfEmployeesOnPension()
@@ -137,7 +137,7 @@ namespace HYPJCW_HSZFT.Logic
         }
 
 
-        public IQueryable<Employees> GetEmployeesOfDepartmentWithDoctorateManager()
+        public List<Employees> GetEmployeesOfDepartmentWithDoctorateManager()
         {
             var everyDepartment = departmentRepo.ReadAll();
             var everyEmployee = employeeRepo.ReadAll();
@@ -148,7 +148,7 @@ namespace HYPJCW_HSZFT.Logic
                 .Where(dept => dept.HeadOfDepartment.Contains("Dr. "))
                 .Select(dept => dept.DepartmentCode)
                 .Contains(d.DepartmentCode)
-                ));
+                )).ToList();
         }
 
 
@@ -179,9 +179,9 @@ namespace HYPJCW_HSZFT.Logic
             var maxJuniorSalary = juniors.Any() ? juniors.Max(j => j.Salary) : 0;
             if (averageMediorSalary > maxJuniorSalary)
             {
-                return (Employees)mediors.Where(m => m.Salary == averageMediorSalary);
+                return mediors.FirstOrDefault(m => m.Salary == averageMediorSalary);
             }
-            return (Employees)juniors.Where(j => j.Salary == maxJuniorSalary);
+            return juniors.FirstOrDefault(j => j.Salary == maxJuniorSalary);
         }
 
         public (string Level, decimal HighestCommission) GetHighestCommissionFromLevel()
@@ -209,11 +209,11 @@ namespace HYPJCW_HSZFT.Logic
 
         }
 
-        public IQueryable<Employees> GetSalaryOfEmployeesBasedOnBirthYear()
+        public List<Employees> GetSalaryOfEmployeesBasedOnBirthYear()
         {
             var everyEmployee = employeeRepo.ReadAll();
             return everyEmployee
-                .OrderBy(e => e.BirthYear);
+                .OrderBy(e => e.BirthYear).ToList();
         }
 
         public Employees GetActiveEmployeeLeastProjects()

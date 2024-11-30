@@ -13,23 +13,23 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         void Create(Employees item);
         Employees Read(string id);
         void Update(Employees item, string id);
-        IQueryable<Employees> ReadAll();
+        List<Employees> ReadAll();
         void Delete(string id);
 
-        IQueryable<Employees> GetEmployeesBornInThe80();
-        IQueryable<Employees> GetEmployeesAtleastWorkingInTwoDepartments();
-        IQueryable<Employees> GetEmployeesWorkingButPension();
-        IQueryable<Employees> GetEmployeesOnPension();
+        List<Employees> GetEmployeesBornInThe80();
+        List<Employees> GetEmployeesAtleastWorkingInTwoDepartments();
+        List<Employees> GetEmployeesWorkingButPension();
+        List<Employees> GetEmployeesOnPension();
         double GetAverageOfSalaryOfEmployeesOnPension();
         IEnumerable<Employees> GetWorkersDescSalaryWithCommission();
         void GetRatesOfEmployeeLevels();
-        IQueryable<Employees> GetEmployeesOfDepartmentWithDoctorateManager();
+        List<Employees> GetEmployeesOfDepartmentWithDoctorateManager();
         AveragesalaryDto GetNumberOfEmployeesUnderOrOverTheAverageSalary();
         Dictionary<string, double> GetAverageOfSalaryEachLevel();
         Employees WhoEarnsMoreJuniorOrMedior();
         (string Level, decimal HighestCommission) GetHighestCommissionFromLevel(); //decimal for more precision
         Employees GetEmployeeWithLeastProjectsBasedOnYearsWorked();
-        IQueryable<Employees> GetSalaryOfEmployeesBasedOnBirthYear();
+        List<Employees> GetSalaryOfEmployeesBasedOnBirthYear();
         Employees GetActiveEmployeeLeastProjects();
         (List<Employees>? EmployeesWithHigherCommission, List<Employees>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary();
 
