@@ -10,5 +10,6 @@ namespace HYPJCW_HSZFT.Models.DTOs
     {
         public int OverAverage { get; set; }
         public int UnderAverage { get; set; }
+
     }
 }

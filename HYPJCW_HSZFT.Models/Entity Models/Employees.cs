@@ -15,7 +15,6 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
     public class Employees
     {
         [XmlAttribute("employeeid")]
-        [JsonIgnore]
         [Key]
         public string EmployeeId { get; set; } = "";
 

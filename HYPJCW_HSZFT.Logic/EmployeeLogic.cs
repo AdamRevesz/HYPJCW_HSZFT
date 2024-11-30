@@ -16,13 +16,40 @@ namespace HYPJCW_HSZFT.Logic
     {
         IRepository<Employees> employeeRepo;
         IRepository<Departments> departmentRepo;
-        public EmployeeLogic(IRepository<Employees> repo)
+        public EmployeeLogic(IRepository<Employees> repo, IRepository<Departments> repo2)
         {
             employeeRepo = repo;
+            departmentRepo = repo2;
         }
-        public List<Employees> ReadAll()
+        public List<EmployeeDto> ReadAll()
         {
-            return employeeRepo.ReadAll().ToList();
+            var everyEmployee = employeeRepo.ReadAll();
+            var everyDepartment = departmentRepo.ReadAll();
+
+            var employeeDtos = everyEmployee.Select(e => new EmployeeDto
+            {
+                EmployeeId = e.EmployeeId,
+                Name = e.Name,
+                BirthYear = e.BirthYear,
+                StartYear = e.StartYear,
+                CompletedProjects = e.CompletedProjects,
+                Active = e.Active,
+                Retired = e.Retired,
+                Email = e.Email,
+                Phone = e.Phone,
+                Job = e.Job,
+                Level = e.Level,
+                Salary = e.Salary,
+                Commission = e.Commission,
+                Departments = e.Departments.Select(d => new DepartmentDto
+                {
+                    Name = d.Name,
+                    DepartmentCode = d.DepartmentCode,
+                    HeadOfDepartment = d.HeadOfDepartment
+                }).ToList()
+            }).ToList();
+
+            return employeeDtos;
         }
 
         public void GetRatesOfEmployeeLevels()
@@ -65,7 +92,7 @@ namespace HYPJCW_HSZFT.Logic
 
         }
 
-        public AveragesalaryDto GetNumberOfEmployeesUnderOrOverTheAverageSalary()
+        public string GetNumberOfEmployeesUnderOrOverTheAverageSalary()
         {
             var everEmployee = employeeRepo.ReadAll();
             var average = everEmployee.Average(x => x.Salary);
@@ -83,46 +110,87 @@ namespace HYPJCW_HSZFT.Logic
                 UnderAverage = result.Where(r => r.IsUnderAverage).Sum(r => r.Count),
                 OverAverage = result.Where(r => !r.IsUnderAverage).Sum(r => r.Count)
             };
-            return rate;
+            return $"Under Average Employees: {rate.UnderAverage}" +
+                $"\nOver Average Employees {rate.OverAverage}";
         }
 
-        public List<Employees> GetEmployeesBornInThe80()
+        public List<EmployeesEvenShorterViewDto> GetEmployeesBornInThe80()
         {
             var everyEmployee = employeeRepo.ReadAll();
-            return everyEmployee.Where(p => p.BirthYear >= 1980 && p.BirthYear <= 1989).ToList();
+            var employees = everyEmployee.Where(p => p.BirthYear >= 1980 && p.BirthYear <= 1989).ToList()
+                .Select(e => new EmployeesEvenShorterViewDto
+                {
+                    EmployeeId = e.EmployeeId,
+                    Name = e.Name,
+                    BirthYear = e.BirthYear,
+                    StartYear = e.StartYear
+                })
+                .ToList();
+            return employees;
         }
 
-        public List<Employees> GetEmployeesAtleastWorkingInTwoDepartments()
+        public List<EmployeesShortViewDto> GetEmployeesAtleastWorkingInTwoDepartments()
         {
             var everyEployee = employeeRepo.ReadAll();
-            return everyEployee.Where(e => e.Departments != null && e.Departments.Count >= 2).ToList();
+            var everyDepartment = departmentRepo.ReadAll();
+            return everyEployee
+                .Where(e => e.Departments.Count >= 2)
+                .Select(e => new EmployeesShortViewDto
+                {
+                    Name = e.Name,
+                    Salary = e.Salary,
+                    Commisison = e.Commission,
+                    Departments = e.Departments.Select(d => new DepartmentDto
+                    {
+                        Name = d.Name,
+                        DepartmentCode = d.DepartmentCode,
+                        HeadOfDepartment = d.HeadOfDepartment
+                    }).ToList()
+                })
+                .ToList();
         }
 
         public List<Employees> GetEmployeesWorkingButPension()
         {
             var everyEmployee = employeeRepo.ReadAll();
-            return everyEmployee.Where(e => e.Retired && e.Active).ToList(); ;
+            var workingButPension = everyEmployee.Where(e => e.Retired && e.Active).ToList();
+            if (workingButPension is null)
+            {
+                throw new ArgumentException("There are no employees working on pension");
+            }
+            return workingButPension;
         }
 
         public List<Employees> GetEmployeesOnPension()
         {
             var everyEmployee = employeeRepo.ReadAll();
-            return everyEmployee.Where(e => e.Retired && !e.Active).ToList();
+            var employeesOnPension = everyEmployee.Where(e => e.Retired && !e.Active).ToList();
+            if(employeesOnPension is null)
+            {
+                throw new ArgumentException("There are no employees on Pension");
+            }
+            return employeesOnPension;
         }
 
         public double GetAverageOfSalaryOfEmployeesOnPension()
         {
             var everyEmployee = employeeRepo.ReadAll();
-            return everyEmployee
-                .Where(e => e.Retired)
-                .Average(e => e.Salary);
+            var employee = everyEmployee
+                .Where(e => e.Retired);
+
+            if (!employee.Any())
+            {
+                throw new NullReferenceException("There is no employee on penison");
+            }
+            return employee
+                .Average(a => a.Salary);
+
         }
 
-        public IEnumerable<Employees> GetWorkersDescSalaryWithCommission()
+        public IEnumerable<EmployeeDto> GetWorkersDescSalaryWithCommission()
         {
             var everyEmployee = employeeRepo.ReadAll()
                 .Where(e => !string.IsNullOrEmpty(e.Commission))
-                .OrderByDescending(e => e.Salary)
                 .ToList();
 
             foreach (var e in everyEmployee)
@@ -133,7 +201,14 @@ namespace HYPJCW_HSZFT.Logic
                     e.Commission = (commissionValue * 400).ToString("F0"); // Convert to HUF
                 }
             }
-            return everyEmployee;
+            return everyEmployee
+                .Select(d => new EmployeeDto
+                {
+                    Name = d.Name,
+                    Salary = d.Salary,
+                    Commission = d.Commission
+                })
+                .OrderByDescending(e => e.Salary);
         }
 
 
@@ -191,10 +266,10 @@ namespace HYPJCW_HSZFT.Logic
                 .OrderByDescending(e => e.Commission)
                 .FirstOrDefault();
 
-            return (highestCommssion.Level, decimal.Parse(highestCommssion.Commission));
+            return (highestCommssion.Level, Math.Round(decimal.Parse(highestCommssion.Commission)));
         }
 
-        public Employees GetEmployeeWithLeastProjectsBasedOnYearsWorked()
+        public EmployeesShortViewDto GetEmployeeWithLeastProjectsBasedOnYearsWorked()
         {
             var everyEmployee = employeeRepo.ReadAll();
             var employeLeast = everyEmployee
@@ -203,20 +278,33 @@ namespace HYPJCW_HSZFT.Logic
 
             if (employeLeast is null)
             {
-                throw new ArgumentException();
+                throw new NullReferenceException("output item is null");
             }
-            return employeLeast;
+            return new EmployeesShortViewDto
+            {
+                Name = employeLeast.Name,
+                CompletedProjects = employeLeast.CompletedProjects
+            };
+               
 
         }
 
-        public List<Employees> GetSalaryOfEmployeesBasedOnBirthYear()
+        public List<EmployeeDto> GetSalaryOfEmployeesBasedOnBirthYear()
         {
             var everyEmployee = employeeRepo.ReadAll();
             return everyEmployee
-                .OrderBy(e => e.BirthYear).ToList();
+                .Select(e => new EmployeeDto
+                {
+                    Name = e.Name,
+                    BirthYear = e.BirthYear,
+                    Salary = e.Salary
+
+                })
+                .OrderBy(e => e.BirthYear)
+                .ToList();
         }
 
-        public Employees GetActiveEmployeeLeastProjects()
+        public EmployeeDto GetActiveEmployeeLeastProjects()
         {
             var everyEmployee = employeeRepo.ReadAll();
             var employee = everyEmployee
@@ -227,10 +315,17 @@ namespace HYPJCW_HSZFT.Logic
             {
                 throw new ArgumentException();
             }
-            return employee;
+            return new EmployeeDto
+                {
+                    Name = employee.Name,
+                    CompletedProjects = employee.CompletedProjects,
+                    Active = employee.Active,
+                    Salary = employee.Salary,
+                    StartYear = employee.StartYear
+                };
         }
 
-        public (List<Employees>? EmployeesWithHigherCommission, List<Employees>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary()
+        public (List<EmployeeDto>? EmployeesWithHigherCommission, List<EmployeeDto>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary()
         {
             var everyEmployee = GetWorkersDescSalaryWithCommission();
 
@@ -285,14 +380,26 @@ namespace HYPJCW_HSZFT.Logic
             employeeRepo.Create(item);
         }
 
-        public Employees Read(string id)
+        public EmployeesShortViewDto Read(string id)
         {
             var employee = employeeRepo.Read(id);
-            if(employee is null)
+            if (employee is null)
             {
                 throw new ArgumentException("Employee not found");
             }
-            return employee;
+            return new EmployeesShortViewDto
+            {
+                Name = employee.Name,
+                Salary = employee.Salary,
+                Commisison = employee.Commission,
+                Departments = employee.Departments.Select(d => new DepartmentDto
+                {
+                    Name = d.Name,
+                    DepartmentCode = d.DepartmentCode,
+                    HeadOfDepartment = d.HeadOfDepartment
+                }).ToList(),
+            };
+
         }
 
         public void Update(Employees item, string id)

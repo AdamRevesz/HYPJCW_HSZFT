@@ -1,5 +1,6 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
 using HYPJCW_HSZFT.Logic.Interfaces;
+using HYPJCW_HSZFT.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -28,15 +29,15 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employee{employeeId}")]
-        public Employees Read([FromRoute] string employeeId)
+        public EmployeesShortViewDto Read([FromRoute] string employeeId)
         {
             return this.logic.Read(employeeId);
         }
 
         [HttpGet("/Employees")]
-        public List<Employees> ReadAll()
+        public List<EmployeeDto> ReadAll()
         {
-            return this.logic.ReadAll().ToList();
+            return this.logic.ReadAll();
         }
 
         [HttpPut("/Employee/{employeeId}")]
@@ -52,19 +53,19 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/underoroveravrsalary")]
-        public void EmployeesUnderOrOver()
+        public string EmployeesUnderOrOver()
         {
-            this.logic.GetNumberOfEmployeesUnderOrOverTheAverageSalary();
+            return this.logic.GetNumberOfEmployeesUnderOrOverTheAverageSalary();
         }
 
         [HttpGet("/Employees/borninthe80s")]
-        public List<Employees> EmployeesBornIn80()
+        public List<EmployeesEvenShorterViewDto> EmployeesBornIn80()
         {
             return this.logic.GetEmployeesBornInThe80();
         }
 
         [HttpGet("/Employees/employeesworkingatleast2departments")]
-        public List<Employees> EmployeesWorkingMultipleDepartments()
+        public List<EmployeesShortViewDto> EmployeesWorkingMultipleDepartments()
         {
             return this.logic.GetEmployeesAtleastWorkingInTwoDepartments();
         }
@@ -88,7 +89,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/averagesalarywithcommission")]
-        public IEnumerable<Employees> AverageSalaryWithCommission()
+        public IEnumerable<EmployeeDto> AverageSalaryWithCommission()
         {
             return this.logic.GetWorkersDescSalaryWithCommission();
         }
@@ -118,25 +119,25 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/employeeleastprojects")]
-        public Employees EmployeesLeastProjects()
+        public EmployeesShortViewDto EmployeesLeastProjects()
         {
             return this.logic.GetEmployeeWithLeastProjectsBasedOnYearsWorked();
         }
 
         [HttpGet("/Employees/salaryofemployeesbirthyear")]
-        public List<Employees> SalaryOfEmployeesBirthYear()
+        public List<EmployeeDto> SalaryOfEmployeesBirthYear()
         {
             return this.logic.GetSalaryOfEmployeesBasedOnBirthYear();
         }
 
         [HttpGet("/Employees/activeemployeeleastprojects")]
-        public Employees ActiveEmployeesLeastProjects()
+        public EmployeeDto ActiveEmployeesLeastProjects()
         {
             return this.logic.GetActiveEmployeeLeastProjects();
         }
 
         [HttpGet("/Employees/highercommissionthanmaxsalary")]
-        public (List<Employees>? EmployeesWithHigherCommission, List<Employees>? EmployeeWithLowerSalary) HigherCommissionThanMaxSalary()
+        public (List<EmployeeDto>? EmployeesWithHigherCommission, List<EmployeeDto>? EmployeeWithLowerSalary) HigherCommissionThanMaxSalary()
         {
             return this.logic.GetEmployeeWithHigherCommissionThanOthersSalary();
         }

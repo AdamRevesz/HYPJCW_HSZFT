@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HYPJCW_HSZFT.Data;
 using HYPJCW_HSZFT.Entities.Entity_Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HYPJCW_HSZFT.Repository
 {
@@ -18,6 +19,11 @@ namespace HYPJCW_HSZFT.Repository
         public override Employees Read(string id)
         {
             return ctx.Employees.FirstOrDefault(x => x.EmployeeId == id);
+        }
+
+        public List<Employees> ReadAll()
+        {
+            return ctx.Employees.Include(e => e.Departments).ToList();
         }
 
         public override void Update(Employees item)
