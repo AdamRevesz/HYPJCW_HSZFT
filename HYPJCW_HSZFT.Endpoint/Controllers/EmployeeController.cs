@@ -107,7 +107,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/whoearnsmore")]
-        public Employees WhoEarnsMore()
+        public string WhoEarnsMore()
         {
             return this.logic.WhoEarnsMoreJuniorOrMedior();
         }

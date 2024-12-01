@@ -238,12 +238,12 @@ namespace HYPJCW_HSZFT.Logic
                     Level = g.Key,
                     AverageSalary = g.Average(e => e.Salary)
                 })
-                .ToDictionary(x => x.Level, x => x.AverageSalary);
+                .ToDictionary(x => x.Level, x => Math.Round(x.AverageSalary));
             return grouped;
 
         }
 
-        public Employees WhoEarnsMoreJuniorOrMedior()
+        public string WhoEarnsMoreJuniorOrMedior()
         {
             var everyEmployee = employeeRepo.ReadAll();
 
@@ -254,9 +254,9 @@ namespace HYPJCW_HSZFT.Logic
             var maxJuniorSalary = juniors.Any() ? juniors.Max(j => j.Salary) : 0;
             if (averageMediorSalary > maxJuniorSalary)
             {
-                return mediors.FirstOrDefault(m => m.Salary == averageMediorSalary);
+                return $"Average Medior: {(averageMediorSalary)}";
             }
-            return juniors.FirstOrDefault(j => j.Salary == maxJuniorSalary);
+            return $"Max Junior: {maxJuniorSalary}";
         }
 
         public (string Level, decimal HighestCommission) GetHighestCommissionFromLevel()

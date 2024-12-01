@@ -26,7 +26,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         List<Employees> GetEmployeesOfDepartmentWithDoctorateManager();
         string GetNumberOfEmployeesUnderOrOverTheAverageSalary();
         Dictionary<string, double> GetAverageOfSalaryEachLevel();
-        Employees WhoEarnsMoreJuniorOrMedior();
+        string WhoEarnsMoreJuniorOrMedior();
         (string Level, decimal HighestCommission) GetHighestCommissionFromLevel(); //decimal for more precision
         EmployeesShortViewDto GetEmployeeWithLeastProjectsBasedOnYearsWorked();
         List<EmployeeDto> GetSalaryOfEmployeesBasedOnBirthYear();
