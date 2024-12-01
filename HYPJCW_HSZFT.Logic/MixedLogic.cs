@@ -1,5 +1,6 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
 using HYPJCW_HSZFT.Logic.Interfaces;
+using HYPJCW_HSZFT.Models.DTOs;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using HYPJCW_HSZFT.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -36,49 +37,59 @@ namespace HYPJCW_HSZFT.Logic
 
         }
 
-        public (List<Managers> Managers, List<Managers> DepartmentManagers) WhoAreManagersOrDepartmentManagers()
+        public List<DepartmentOrManagersDto> WhoAreManagersOrDepartmentManagers()
         {
-            var everymanager = managerRepo.ReadAll();
-            var departmens = departmentRepo.ReadAll();
+            var everyManager = managerRepo.ReadAll();
+            var departments = departmentRepo.ReadAll();
 
-            var headsOfDepartments = departmens
-                .Select(d => d.HeadOfDepartment)
+            var departmentHeads = departments.Select(d => d.HeadOfDepartment).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            var managerDtos = everyManager
+                .Where(m => !departmentHeads.Contains(m.Name))
+                .Select(m => new DepartmentOrManagersDto
+                {
+                    Id = m.ManagerId,
+                    Name = m.Name,
+                    DepartmentManager = false
+                })
                 .ToList();
 
-            var departmentManagers = everymanager
-                .Where(m => headsOfDepartments.Contains(m.Name))
+            var departmentHeadDtos = departments
+                .Select(d => new DepartmentOrManagersDto
+                {
+                    Id = d.DepartmentCode,
+                    Name = d.HeadOfDepartment,
+                    DepartmentManager = true
+                })
                 .ToList();
 
-            var onlyManagers = everymanager
-                .Where(m => !headsOfDepartments.Contains(m.Name))
-                .ToList();
-
-            return
-                (
-                onlyManagers,
-                departmentManagers
-                );
+            return managerDtos.Concat(departmentHeadDtos).ToList();
         }
 
-        public (string Name, int YearsWorked) WhoWorksForTheLongest()
+
+        public ManagerOrEmployeeDto WhoWorksForTheLongest()
         {
             var everyEmployee = employeeRepo.ReadAll();
             var everyManager = managerRepo.ReadAll();
 
             var longestWorkingEmployee = everyEmployee
-                .Select(e => new
+                .Select(e => new ManagerOrEmployeeDto
                 {
+                    Id = e.EmployeeId,
                     Name = e.Name,
-                    YearsWorked = DateTime.Now.Year - e.StartYear
+                    Manager = false,
+                    YearsWorked = (DateTime.Now.Year - e.StartYear)
                 })
                 .OrderByDescending(e => e.YearsWorked)
                 .FirstOrDefault();
 
             var longestWorkingManager = everyManager
-                .Select(m => new
+                .Select(m => new ManagerOrEmployeeDto
                 {
+                    Id = m.ManagerId,
                     Name = m.Name,
-                    YearsWorked = DateTime.Now.Year - DateTime.Parse(m.StartOfEmployment).Year
+                    Manager = true,
+                    YearsWorked = (int)((DateTime.Now - DateTime.Parse(m.StartOfEmployment)).TotalDays / 365.25)
                 })
                 .OrderByDescending(m => m.YearsWorked)
                 .FirstOrDefault();
@@ -90,19 +101,11 @@ namespace HYPJCW_HSZFT.Logic
 
             if (longestWorkingManager.YearsWorked > longestWorkingEmployee.YearsWorked)
             {
-                return
-                (
-                  longestWorkingManager.Name,
-                  longestWorkingManager.YearsWorked
-                );
+                return longestWorkingManager;
             }
             else if (longestWorkingEmployee.YearsWorked > longestWorkingManager.YearsWorked)
             {
-                return
-                (
-                 longestWorkingEmployee.Name,
-                 longestWorkingEmployee.YearsWorked
-                );
+                return longestWorkingEmployee;
             }
             throw new ArgumentException("They worked the same years");
         }

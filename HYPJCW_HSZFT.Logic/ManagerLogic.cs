@@ -24,7 +24,7 @@ namespace HYPJCW_HSZFT.Logic
         public void Create(Managers manager)
         {
             var everyManager = managerRepo.ReadAll();
-             if (manager is null)
+            if (manager is null)
             {
                 throw new ArgumentException("Manager is null");
             }
@@ -60,7 +60,7 @@ namespace HYPJCW_HSZFT.Logic
             var doctorateManagers = everyManager
                 .Where(m => m.Name.ToLower().Contains("dr.%%") && !m.HasMba).ToList();
 
-            if(doctorateManagers is null)
+            if (doctorateManagers is null)
             {
                 throw new Exception("There are no managers without MBA");
             }
@@ -72,15 +72,18 @@ namespace HYPJCW_HSZFT.Logic
             var everyManager = managerRepo.ReadAll();
 
             var longestWorkingManager = everyManager
-                .OrderByDescending(m => (DateTime.Now.Year - DateTime.Parse(m.StartOfEmployment).Year))
+                .OrderByDescending(m =>
+                ((DateTime.Now - DateTime.Parse(m.StartOfEmployment)).TotalDays / 365.25) /
+                ((DateTime.Now - new DateTime(m.BirthYear, 1, 1)).TotalDays / 365.25)
+                )
                 .FirstOrDefault();
 
-            if(longestWorkingManager is null)
+            if (longestWorkingManager is null)
             {
                 throw new Exception();
             }
             return longestWorkingManager;
-                
+
         }
 
         public Managers GetLongestWorkingManagerComparedToHisAge()
@@ -88,22 +91,28 @@ namespace HYPJCW_HSZFT.Logic
             var everyManager = managerRepo.ReadAll();
 
             var managerForAge = everyManager
-                .OrderBy(m => (DateTime.Now.Year - m.BirthYear) - DateTime.Parse(m.StartOfEmployment).Year)
-                .FirstOrDefault();
+                .Select(m => new
+                {
+                    Manager = m,
+                    Ratio = ((DateTime.Now - DateTime.Parse(m.StartOfEmployment)).TotalDays / 365.25) /
+                ((DateTime.Now - new DateTime(m.BirthYear, 1, 1)).TotalDays / 365.25)
+                })
+                .OrderByDescending(x => x.Ratio)
+                .FirstOrDefault()?.Manager;
 
-            if(managerForAge is null)
+            if (managerForAge is null)
             {
                 throw new ArgumentException();
             }
             return managerForAge;
-                
+
         }
 
         public List<Managers> GetManagersWithDoctorate()
         {
             var everyManager = managerRepo.ReadAll();
             return everyManager
-                .Where(m => m.Name.ToLower().Contains("Dr%%")).ToList();
+                .Where(m => m.Name.ToLower().Contains("dr.")).ToList();
         }
 
         public void GetRateOfManagersWithMbaAndWithout()
@@ -135,7 +144,7 @@ namespace HYPJCW_HSZFT.Logic
         public Managers Read(string id)
         {
             var manager = managerRepo.Read(id);
-            if(manager is null)
+            if (manager is null)
             {
                 throw new ArgumentException("Manager does not exist");
             }

@@ -1,4 +1,5 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
+using HYPJCW_HSZFT.Models.DTOs;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,8 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
 {
     public interface IMixedLogic
     {
-        (string Name, int YearsWorked) WhoWorksForTheLongest();
+        ManagerOrEmployeeDto WhoWorksForTheLongest();
         List<Managers> IsThereManagerWhoIsDepartmentManager();
-        (List<Managers> Managers, List<Managers> DepartmentManagers) WhoAreManagersOrDepartmentManagers();
+        List<DepartmentOrManagersDto> WhoAreManagersOrDepartmentManagers();
     }
 }
