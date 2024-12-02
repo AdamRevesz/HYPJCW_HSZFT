@@ -4,46 +4,140 @@ using HYPJCW_HSZFT.Logic;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using HYPJCW_HSZFT.Repository;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
+using System.Text;
+using System.Xml.Linq;
+using HYPJCW_HSZFT.Logic.Interfaces;
 
 namespace HYPJCW_HSZFT.Client
 {
     internal class Program
     {
+        private static IImportLogic _importLogic;
+        // Instantiate ImportLogic
+
+        const string baseUrl = "http://localhost:5174";
+        const string baseUrl2 = "https://localhost:7108";
+        const string path = "InputData/InputData.json";
+
         static async Task Main(string[] args)
         {
+            string[] menuItems = { "Read Xml File", "Get Monthly statistics", "Exit" };
+            bool exit = false;
 
-            //string url ="https://nik.siposm.hu/db/managers.json";
-            //var test = await ImportLogic.ImportJsFromUrl(url);
+            while (!exit)
+            {
+                int selectedIndex = 0;
 
-            //List<Managers> managers = ImportLogic.GetManagersJson(test);
+                ConsoleKey key;
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("Use Arrow Keys to navigate and Enter to select:\n");
 
-            //foreach (var item in managers)
-            //{
-            //    Console.WriteLine($"Name: {item.Name} \t ManagerId: {item.ManagerId}");
-            //}
+                    for (int i = 0; i < menuItems.Length; i++)
+                    {
+                        if (i == selectedIndex)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+                        else
+                        {
+                            Console.ResetColor();
+                        }
 
-            //string url2 ="https://raw.githubusercontent.com/siposm/oktatas-hft/refs/heads/master/BPROF-HSZF/semester-project/employees-departments.xml";
-            //var test2 = await ImportLogic.ImportXmlFromUrl(url2);
+                        Console.WriteLine(menuItems[i]);
+                    }
 
-            //List<Employees> employees = ImportLogic.GetEmployeesXml(test2);
+                    Console.ResetColor();
 
-            //foreach (var item in employees)
-            //{
-            //    Console.WriteLine($"Name: {item.Name} \t Salary: {item.Salary}");
-            //}
-            //var typesToExport = new[] {typeof(Employees), typeof(Departments)};
-            //var xmlDocument = ExportLogic.ExportToXml(typesToExport);
-            //xmlDocument.Save("exported_entities.xml");
-            //Console.WriteLine(xmlDocument);
+                    key = Console.ReadKey(true).Key;
 
-            //Graphlogic.GraphOfEmployeeSalary(employees);
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedIndex = (selectedIndex == 0) ? menuItems.Length - 1 : selectedIndex - 1;
+                            break;
 
-            //EmployeeLogic.GetRatesOfEmployeeLevels(employees);
+                        case ConsoleKey.DownArrow:
+                            selectedIndex = (selectedIndex == menuItems.Length - 1) ? 0 : selectedIndex + 1;
+                            break;
+                    }
+                } while (key != ConsoleKey.Enter); 
 
-            //var (level, highestCommission) = EmployeeLogic.GetHighestCommissionFromLevel(employees);
-            //Console.WriteLine($"Level: {level} \t Highest Commission: {highestCommission}");
-           
+               
+                Console.Clear();
+                if (selectedIndex == 0)
+                {
+                    Console.WriteLine($"You selected: {menuItems[selectedIndex]}");
+                    await ImportFromXml();
+                }
+                else if (selectedIndex == 1)
+                {
+                    Console.WriteLine($"You selected: {menuItems[selectedIndex]}");
 
+                }
+                else if (selectedIndex == 2)
+                {
+                    break;
+                }
+                Console.WriteLine("Press any key to return");
+                Console.ReadKey();
+            }
         }
+
+
+        public static async Task ImportFromXml()
+        {
+            Console.WriteLine("Input the XML URL:");
+
+            string xmlUrl = Console.ReadLine();
+            if (string.IsNullOrEmpty(xmlUrl))
+            {
+                Console.WriteLine("The input is empty");
+                return;
+            }
+
+            try
+            {
+                await _importLogic.GetEmployeesXml(xmlUrl);
+                Console.WriteLine("Employees imported successfully from XML.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+            }
+        }
+
+        public static async Task<bool> ImportFromJson()
+        {
+            Console.WriteLine("Please input a link");
+
+            string jsonUrl = Console.ReadLine();
+            var url = baseUrl + "/import/importjs";
+
+            using var client = new HttpClient();
+            if (jsonUrl is null)
+            {
+                throw new NullReferenceException("The input is empty");
+            }
+            try
+            {
+                var content = new StringContent($"\"{jsonUrl}\"", Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error {ex.Message}");
+                return false;
+            }
+            return true;
+        }
+
+
     }
 }
+
+

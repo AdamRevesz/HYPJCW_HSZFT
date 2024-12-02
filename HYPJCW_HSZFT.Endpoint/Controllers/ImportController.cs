@@ -2,6 +2,8 @@
 using HYPJCW_HSZFT.Logic.Interfaces;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Xml.Linq;
 
 namespace HYPJCW_HSZFT.Endpoint.Controllers
 {
@@ -28,7 +30,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpPost("/import/importxml")]
-        public async Task ImportEmployeesFromXML(string url)
+        public async Task ImportEmployeesFromXML([FromBody] string url)
         {
             if (url is null)
             {
