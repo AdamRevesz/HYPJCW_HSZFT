@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities exportDate="2024-12-02 22:33:12">
+  <entity hash="32217513" name="Employees" namespace="HYPJCW_HSZFT.Entities.Entity_Models">
+    <properties>
+      <property type="String" name="EmployeeId" isAttribute="true" isCollection="false" />
+      <property type="String" name="Name" isAttribute="false" isCollection="false" />
+      <property type="Int32" name="BirthYear" isAttribute="false" isCollection="false" />
+      <property type="Int32" name="StartYear" isAttribute="false" isCollection="false" />
+      <property type="Int32" name="CompletedProjects" isAttribute="false" isCollection="false" />
+      <property type="Boolean" name="Active" isAttribute="false" isCollection="false" />
+      <property type="Boolean" name="Retired" isAttribute="false" isCollection="false" />
+      <property type="String" name="Email" isAttribute="false" isCollection="false" />
+      <property type="String" name="Phone" isAttribute="false" isCollection="false" />
+      <property type="String" name="Job" isAttribute="false" isCollection="false" />
+      <property type="String" name="Level" isAttribute="false" isCollection="false" />
+      <property type="Int32" name="Salary" isAttribute="false" isCollection="false" />
+      <property type="String" name="Commission" isAttribute="false" isCollection="false" />
+      <property type="ICollection`1" name="Departments" isAttribute="false" isCollection="true" collectionType="Departments" />
+      <property type="ICollection`1" name="EmployeesOfDepartments" isAttribute="false" isCollection="true" collectionType="EmployeesOfDepartments" />
+    </properties>
+    <methods>
+      <method returnType="String" name="get_EmployeeId">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_EmployeeId">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_Name">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Name">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="Int32" name="get_BirthYear">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_BirthYear">
+        <parameters>
+          <param type="Int32" name="value" />
+        </parameters>
+      </method>
+      <method returnType="Int32" name="get_StartYear">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_StartYear">
+        <parameters>
+          <param type="Int32" name="value" />
+        </parameters>
+      </method>
+      <method returnType="Int32" name="get_CompletedProjects">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_CompletedProjects">
+        <parameters>
+          <param type="Int32" name="value" />
+        </parameters>
+      </method>
+      <method returnType="Boolean" name="get_Active">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Active">
+        <parameters>
+          <param type="Boolean" name="value" />
+        </parameters>
+      </method>
+      <method returnType="Boolean" name="get_Retired">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Retired">
+        <parameters>
+          <param type="Boolean" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_Email">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Email">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_Phone">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Phone">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_Job">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Job">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_Level">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Level">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="Int32" name="get_Salary">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Salary">
+        <parameters>
+          <param type="Int32" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_Commission">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Commission">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="ICollection`1" name="get_Departments">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Departments">
+        <parameters>
+          <param type="ICollection`1" name="value" />
+        </parameters>
+      </method>
+      <method returnType="ICollection`1" name="get_EmployeesOfDepartments">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_EmployeesOfDepartments">
+        <parameters>
+          <param type="ICollection`1" name="value" />
+        </parameters>
+      </method>
+    </methods>
+  </entity>
+  <entity hash="53218812" name="Departments" namespace="HYPJCW_HSZFT.Entities.Entity_Models">
+    <properties>
+      <property type="String" name="Name" isAttribute="false" isCollection="false" />
+      <property type="String" name="DepartmentCode" isAttribute="false" isCollection="false" />
+      <property type="String" name="HeadOfDepartment" isAttribute="false" isCollection="false" />
+      <property type="ICollection`1" name="Employees" isAttribute="false" isCollection="true" collectionType="Employees" />
+      <property type="ICollection`1" name="EmployeesOfDepartments" isAttribute="false" isCollection="true" collectionType="EmployeesOfDepartments" />
+    </properties>
+    <methods>
+      <method returnType="String" name="get_Name">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Name">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_DepartmentCode">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_DepartmentCode">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_HeadOfDepartment">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_HeadOfDepartment">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="ICollection`1" name="get_Employees">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Employees">
+        <parameters>
+          <param type="ICollection`1" name="value" />
+        </parameters>
+      </method>
+      <method returnType="ICollection`1" name="get_EmployeesOfDepartments">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_EmployeesOfDepartments">
+        <parameters>
+          <param type="ICollection`1" name="value" />
+        </parameters>
+      </method>
+    </methods>
+  </entity>
+  <entity hash="30123063" name="Managers" namespace="HYPJCW_HSZFT.Models.Entity_Models">
+    <properties>
+      <property type="String" name="Name" isAttribute="false" isCollection="false" />
+      <property type="String" name="ManagerId" isAttribute="false" isCollection="false" />
+      <property type="Int32" name="BirthYear" isAttribute="false" isCollection="false" />
+      <property type="String" name="StartOfEmployment" isAttribute="false" isCollection="false" />
+      <property type="Boolean" name="HasMba" isAttribute="false" isCollection="false" />
+    </properties>
+    <methods>
+      <method returnType="String" name="get_Name">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_Name">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_ManagerId">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_ManagerId">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="Int32" name="get_BirthYear">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_BirthYear">
+        <parameters>
+          <param type="Int32" name="value" />
+        </parameters>
+      </method>
+      <method returnType="String" name="get_StartOfEmployment">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_StartOfEmployment">
+        <parameters>
+          <param type="String" name="value" />
+        </parameters>
+      </method>
+      <method returnType="Boolean" name="get_HasMba">
+        <parameters />
+      </method>
+      <method returnType="Void" name="set_HasMba">
+        <parameters>
+          <param type="Boolean" name="value" />
+        </parameters>
+      </method>
+    </methods>
+  </entity>
+</entities>

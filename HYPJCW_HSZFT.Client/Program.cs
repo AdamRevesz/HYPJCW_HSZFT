@@ -14,16 +14,13 @@ namespace HYPJCW_HSZFT.Client
 {
     internal class Program
     {
-        private static IImportLogic _importLogic;
-        // Instantiate ImportLogic
-
         const string baseUrl = "http://localhost:5174";
-        const string baseUrl2 = "https://localhost:7108";
+        const string baseUrl2 = "https://localhost:7185";
         const string path = "InputData/InputData.json";
 
         static async Task Main(string[] args)
         {
-            string[] menuItems = { "Read Xml File", "Export Class Data", "Queries", "Exit" };
+            string[] menuItems = { "Read Xml File","Read Json File", "Export Class Data", "Queries", "Exit" };
             string[] queryMenuItems =
             {
                 "List all employees",
@@ -98,9 +95,13 @@ namespace HYPJCW_HSZFT.Client
                 else if (selectedIndex == 1)
                 {
                     Console.WriteLine($"You selected: {menuItems[selectedIndex]}");
-
+                    await ImportFromJson();
                 }
                 else if (selectedIndex == 2)
+                {
+                    await ExportClasses();
+                }
+                else if(selectedIndex == 3)
                 {
                     bool queryExit = false;
                     while (!queryExit)
@@ -141,9 +142,12 @@ namespace HYPJCW_HSZFT.Client
                                     break;
                             }
                         } while (key1 != ConsoleKey.Enter);
-
                         Console.Clear();
-                        if (selectedIndex2 == queryMenuItems.Length -1)
+                        if (selectedIndex2 == 0)
+                        {
+                            GetAllEmployees();
+                        }
+                        else if (selectedIndex2 == queryMenuItems.Length -1)
                         {
                             queryExit = true;
                         }
@@ -157,7 +161,7 @@ namespace HYPJCW_HSZFT.Client
                         }
                     }
                 }
-                else if (selectedIndex == 3)
+                else if (selectedIndex == 4)
                 {
                     break;
                 }
@@ -166,33 +170,71 @@ namespace HYPJCW_HSZFT.Client
             }
         }
 
-
-        //public void List<EmployeeDto> GetAllEmployees()
-        //{
-
-                //}
-
-
-        public static async Task ImportFromXml()
+        public static async Task<bool> ExportClasses()
         {
-            Console.WriteLine("Input the XML URL:");
+            var url = baseUrl + "/export/exportclassdata";
 
-            string xmlUrl = Console.ReadLine();
-            if (string.IsNullOrEmpty(xmlUrl))
-            {
-                Console.WriteLine("The input is empty");
-                return;
-            }
-
+            using var client = new HttpClient();
             try
             {
-                await _importLogic.GetEmployeesXml(xmlUrl);
-                Console.WriteLine("Employees imported successfully from XML.");
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
-                Console.WriteLine($"There was an error: {ex.Message}");
+                Console.WriteLine($"There was an error {ex.Message}");
+                return false;
             }
+            return true;
+        }
+
+
+        public static async void GetAllEmployees()
+        {
+            var url = baseUrl + "/Employees";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var employees = JsonSerializer.Deserialize<List<EmployeeDto>>(responseBody);
+                foreach (var item in employees)
+                {
+                    Console.Write(item.ToString());
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error {ex.Message}");
+            }
+        }
+
+
+        public static async Task<bool> ImportFromXml()
+        {
+            Console.WriteLine("Please input a link");
+
+            string xmlUrl = Console.ReadLine();
+            var url = baseUrl + "/import/importxml";
+
+            using var client = new HttpClient();
+            if (xmlUrl is null)
+            {
+                throw new NullReferenceException("The input is empty");
+            }
+            url += $"?url={xmlUrl}";
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error {ex.Message}");
+                return false;
+            }
+            return true;
         }
 
         public static async Task<bool> ImportFromJson()
@@ -207,10 +249,10 @@ namespace HYPJCW_HSZFT.Client
             {
                 throw new NullReferenceException("The input is empty");
             }
+            url += $"?url={jsonUrl}";
             try
             {
-                var content = new StringContent($"\"{jsonUrl}\"", Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(url, content);
+                var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException ex)

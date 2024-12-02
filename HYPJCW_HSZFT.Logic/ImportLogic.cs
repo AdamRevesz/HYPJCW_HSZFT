@@ -5,11 +5,13 @@ using HYPJCW_HSZFT.Models.Entity_Models;
 using HYPJCW_HSZFT.Repository;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -20,6 +22,7 @@ namespace HYPJCW_HSZFT.Logic
         private readonly IRepository<Managers> _managerRepo;
         private readonly IRepository<Employees> _employeeRepo;
         private readonly IRepository<Departments> _departmentRepo;
+        private readonly IRepository<EmployeesOfDepartments> employeesOfDeptRepo;
 
         public ImportLogic(IRepository<Managers> repo1, IRepository<Employees> repo2, IRepository<Departments> repo3)
         {
@@ -110,8 +113,6 @@ namespace HYPJCW_HSZFT.Logic
                 foreach (var deptElement in departmentElements)
                 {
                     var departmentCode = deptElement.Element("DepartmentCode")?.Value ?? "000";
-
-                    // Try to get the existing department from the repository
                     var existingDepartment = _departmentRepo.ReadAll()
                         .FirstOrDefault(d => d.DepartmentCode == departmentCode);
 
@@ -121,7 +122,6 @@ namespace HYPJCW_HSZFT.Logic
                     }
                     else
                     {
-                        // Create a new department and add it to the repository
                         var newDepartment = new Departments(
                             name: deptElement.Element("Name")?.Value ?? "Unknown",
                             departmentCode: departmentCode,
@@ -132,28 +132,48 @@ namespace HYPJCW_HSZFT.Logic
                     }
                 }
 
-                // Create the employee and assign the departments
-                Employees employee = new Employees
-                {
-                    EmployeeId = element.Attribute("employeeid")?.Value ?? "0",
-                    Name = element.Element("Name")?.Value ?? "Null",
-                    BirthYear = int.Parse(element.Element("BirthYear")?.Value),
-                    StartYear = int.Parse(element.Element("StartYear")?.Value),
-                    CompletedProjects = int.Parse(element.Element("CompletedProjects")?.Value ?? "0"),
-                    Active = bool.Parse(element.Element("Active")?.Value ?? "false"),
-                    Retired = bool.Parse(element.Element("Retired")?.Value ?? "false"),
-                    Email = element.Element("Email")?.Value ?? "No email",
-                    Phone = element.Element("Phone")?.Value ?? "No phone",
-                    Job = element.Element("Job")?.Value ?? "No job",
-                    Level = element.Element("Level")?.Value ?? "null",
-                    Salary = int.Parse(element.Element("Salary")?.Value ?? "0"),
-                    Commission = element.Element("Commission")?.Attribute("currency") != null
-                        ? $"{element.Element("Commission")?.Attribute("currency")?.Value} {element.Element("Commission")?.Value}"
-                        : element.Element("Commission")?.Value ?? "0",
-                    Departments = departments
-                };
+                // Ensure no null departments are added
+                departments = departments.Where(d => d != null).ToList();
+                var employeeId = element.Attribute("employeeid")?.Value ?? "0";
+                var existingEmployee = _employeeRepo.ReadAll()
+                    .FirstOrDefault(e => e.EmployeeId == employeeId);
 
-                _employeeRepo.Create(employee);
+                if (existingEmployee == null)
+                {
+                    // Create the employee and assign the departments
+                    Employees employee = new Employees
+                    {
+                        EmployeeId = employeeId,
+                        Name = element.Element("Name")?.Value ?? "Null",
+                        BirthYear = int.Parse(element.Element("BirthYear")?.Value),
+                        StartYear = int.Parse(element.Element("StartYear")?.Value),
+                        CompletedProjects = int.Parse(element.Element("CompletedProjects")?.Value ?? "0"),
+                        Active = bool.Parse(element.Element("Active")?.Value ?? "false"),
+                        Retired = bool.Parse(element.Element("Retired")?.Value ?? "false"),
+                        Email = element.Element("Email")?.Value ?? "No email",
+                        Phone = element.Element("Phone")?.Value ?? "No phone",
+                        Job = element.Element("Job")?.Value ?? "No job",
+                        Level = element.Element("Level")?.Value ?? "null",
+                        Salary = int.Parse(element.Element("Salary")?.Value ?? "0"),
+                        Commission = element.Element("Commission")?.Attribute("currency") != null
+                            ? $"{element.Element("Commission")?.Attribute("currency")?.Value} {element.Element("Commission")?.Value}"
+                            : element.Element("Commission")?.Value ?? "0",
+                        Departments = departments
+                    };
+
+                    _employeeRepo.Create(employee);
+
+                    foreach (var department in employee?.Departments)
+                    {
+                            employeesOfDeptRepo.Create(new EmployeesOfDepartments
+                            {
+                                EmployeesOfDepartmentsId = Guid.NewGuid().ToString(),
+                                EmployeeId = employee.EmployeeId,
+                                DepartmentId = department.DepartmentCode
+                            });
+                        
+                    }
+                }
             }
 
         }

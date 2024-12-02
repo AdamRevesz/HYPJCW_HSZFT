@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
+using System.Reflection.Emit;
 
 namespace HYPJCW_HSZFT.Data
 {
@@ -13,22 +14,19 @@ namespace HYPJCW_HSZFT.Data
         public DbSet<Employees> Employees { get; set; }
         public DbSet<Departments> Departments { get; set; }
         public DbSet<Managers> Managers { get; set; }
+        public DbSet<EmployeesOfDepartments> EmployeesOfDepartments { get; set; }
 
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
-            ChangeTracker.LazyLoadingEnabled = false;
         }
 
         protected override void OnModelCreating(ModelBuilder mod)
         {
             mod.Entity<Employees>(entity =>
             {
-                entity.HasKey(x => x.EmployeeId);
+                entity.HasKey(e => e.EmployeeId);
+            });
 
-                entity.HasMany(e => e.Departments)
-                .WithMany(d => d.Employees);
-            }
-            );
             mod.Entity<Departments>(entity =>
             {
                 entity.HasKey(x => x.DepartmentCode);
@@ -39,8 +37,18 @@ namespace HYPJCW_HSZFT.Data
                 entity.HasKey(x => x.ManagerId);
             });
 
+            mod.Entity<EmployeesOfDepartments>(entity =>
+            {
+                entity.HasKey(e => e.EmployeesOfDepartmentsId);
 
+                entity.HasOne(eod => eod.Employee)
+                    .WithMany(e => e.EmployeesOfDepartments)
+                    .HasForeignKey(eod => eod.EmployeeId);
 
+                entity.HasOne(e => e.Department)
+                    .WithMany(d => d.EmployeesOfDepartments)
+                    .HasForeignKey(eod => eod.DepartmentId);
+            });
             base.OnModelCreating(mod);
         }
     }

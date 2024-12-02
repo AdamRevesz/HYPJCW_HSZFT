@@ -1,4 +1,5 @@
 ﻿using HYPJCW_HSZFT.Entities.Dependencies;
+using HYPJCW_HSZFT.Logic.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ using System.Xml.Serialization;
 
 namespace HYPJCW_HSZFT.Logic
 {
-    public class ExportLogic
+    public class ExportLogic : IExportLogic
     {
-        public static XDocument ExportToXml(Type[] typesToExport)
+        public void ExportToXml(Type[] typesToExport)
         {
             var root = new XElement("entities",
              new XAttribute("exportDate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
@@ -74,8 +75,15 @@ namespace HYPJCW_HSZFT.Logic
                 entity.Add(methods);
                 root.Add(entity);
             }
-
-            return new XDocument(root);
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string filePath = Path.Combine(desktopPath, "ExportedEntities.xml");
+            XDocument document = new XDocument(root);
+            using (var writer = new StreamWriter(filePath))
+            {
+                document.Save(writer);
+            }
         }
+
+
     }
 }

@@ -20,10 +20,12 @@ namespace HYPJCW_HSZFT.Endpoint
             builder.Services.AddTransient<IRepository<Employees>, EmployeeRepository>();
             builder.Services.AddTransient<IRepository<Managers>, ManagersRepository>();
             builder.Services.AddTransient<IRepository<Departments>, DepartmentsRepository>();
+            builder.Services.AddTransient<IRepository<EmployeesOfDepartments>, EmployeesOfDepartmentsRepository>();
             builder.Services.AddScoped<IEmployeesLogic, EmployeeLogic>();
             builder.Services.AddScoped<IManagerLogic, ManagerLogic>();
             builder.Services.AddScoped<IMixedLogic, MixedLogic>();
             builder.Services.AddScoped<IImportLogic, ImportLogic>();
+            builder.Services.AddScoped<IExportLogic, ExportLogic>();
 
 
             builder.Services.AddDbContext<MainDbContext>(options =>

@@ -1,4 +1,5 @@
 ﻿using HYPJCW_HSZFT.Entities.Dependencies;
+using HYPJCW_HSZFT.Models.Entity_Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         [MaxLength(200)]
         public string HeadOfDepartment { get; set; }
         public virtual ICollection<Employees> Employees{ get; set; }
+        public virtual ICollection<EmployeesOfDepartments> EmployeesOfDepartments { get; set; }
 
 
         public Departments(string name, string departmentCode,string headOfDepartment )

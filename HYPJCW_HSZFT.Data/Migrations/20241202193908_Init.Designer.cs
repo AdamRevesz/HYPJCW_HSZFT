@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HYPJCW_HSZFT.Data.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20241129224757_changes")]
-    partial class changes
+    [Migration("20241202193908_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,6 +112,28 @@ namespace HYPJCW_HSZFT.Data.Migrations
                     b.ToTable("Employees");
                 });
 
+            modelBuilder.Entity("HYPJCW_HSZFT.Models.Entity_Models.EmployeesOfDepartments", b =>
+                {
+                    b.Property<string>("EmployeesOfDepartmentsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DepartmentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("EmployeesOfDepartmentsId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("EmployeesOfDepartments");
+                });
+
             modelBuilder.Entity("HYPJCW_HSZFT.Models.Entity_Models.Managers", b =>
                 {
                     b.Property<string>("ManagerId")
@@ -149,6 +171,35 @@ namespace HYPJCW_HSZFT.Data.Migrations
                         .HasForeignKey("EmployeesEmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HYPJCW_HSZFT.Models.Entity_Models.EmployeesOfDepartments", b =>
+                {
+                    b.HasOne("HYPJCW_HSZFT.Entities.Entity_Models.Departments", "Department")
+                        .WithMany("EmployeesOfDepartments")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HYPJCW_HSZFT.Entities.Entity_Models.Employees", "Employee")
+                        .WithMany("EmployeesOfDepartments")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("HYPJCW_HSZFT.Entities.Entity_Models.Departments", b =>
+                {
+                    b.Navigation("EmployeesOfDepartments");
+                });
+
+            modelBuilder.Entity("HYPJCW_HSZFT.Entities.Entity_Models.Employees", b =>
+                {
+                    b.Navigation("EmployeesOfDepartments");
                 });
 #pragma warning restore 612, 618
         }

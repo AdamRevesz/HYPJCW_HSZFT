@@ -10,7 +10,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
     [ApiController]
     public class EmployeeController : Controller
     {
-        IEmployeesLogic logic;
+        private readonly IEmployeesLogic logic;
 
         public EmployeeController(IEmployeesLogic logic)
         {

@@ -32,6 +32,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public int Salary { get; set; }
         public string Commission { get; set; } = "";
         public virtual ICollection<Departments> Departments { get; set; }
+        public virtual ICollection<EmployeesOfDepartments> EmployeesOfDepartments { get; set; }
 
         public Employees(
             string employeeId, string name, int birthYear, int startYear,

@@ -19,7 +19,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             _logic = logic;
         }
 
-        [HttpPost("/import/importjs")]
+        [HttpGet("/import/importjs")]
         public async Task ImportManagersFromJs(string url)
         {
             if(url is null)
@@ -29,8 +29,8 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             await _logic.GetManagersJson(url);
         }
 
-        [HttpPost("/import/importxml")]
-        public async Task ImportEmployeesFromXML([FromBody] string url)
+        [HttpGet("/import/importxml")]
+        public async Task ImportEmployeesFromXML(string url)
         {
             if (url is null)
             {

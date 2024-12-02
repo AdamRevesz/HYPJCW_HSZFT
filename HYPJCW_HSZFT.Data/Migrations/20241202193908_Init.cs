@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace HYPJCW_HSZFT.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class New : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,8 +52,8 @@ namespace HYPJCW_HSZFT.Data.Migrations
                 {
                     ManagerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthYear = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StartOfEmployment = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BirthYear = table.Column<int>(type: "int", nullable: false),
+                    StartOfEmployment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HasMba = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -86,10 +85,45 @@ namespace HYPJCW_HSZFT.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "EmployeesOfDepartments",
+                columns: table => new
+                {
+                    EmployeesOfDepartmentsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DepartmentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeesOfDepartments", x => x.EmployeesOfDepartmentsId);
+                    table.ForeignKey(
+                        name: "FK_EmployeesOfDepartments_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "DepartmentCode",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmployeesOfDepartments_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_DepartmentsEmployees_EmployeesEmployeeId",
                 table: "DepartmentsEmployees",
                 column: "EmployeesEmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeesOfDepartments_DepartmentId",
+                table: "EmployeesOfDepartments",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeesOfDepartments_EmployeeId",
+                table: "EmployeesOfDepartments",
+                column: "EmployeeId");
         }
 
         /// <inheritdoc />
@@ -97,6 +131,9 @@ namespace HYPJCW_HSZFT.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DepartmentsEmployees");
+
+            migrationBuilder.DropTable(
+                name: "EmployeesOfDepartments");
 
             migrationBuilder.DropTable(
                 name: "Managers");

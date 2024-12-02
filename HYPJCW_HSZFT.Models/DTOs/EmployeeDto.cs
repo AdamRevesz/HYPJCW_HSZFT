@@ -22,7 +22,24 @@ namespace HYPJCW_HSZFT.Models.DTOs
         public int Salary { get; set; }
         public string Commission { get; set; }
         public List<DepartmentDto> Departments { get; set; }
-        
+
+        public override string ToString()
+        {
+            return $"Employee Id: {EmployeeId}" +
+                $"\nName: {Name}" +
+                $"\nBirthYear: {BirthYear}" +
+                $"\nStartYear: {Convert.ToString(StartYear)}" +
+                $"\nCompleted Projects: {Convert.ToString(CompletedProjects)}" +
+                $"\n Active? : {(Active ? "Active" : "On pension")}" +
+                $"\n Email: {Email}" +
+                $"\nPhone number: {Phone}" +
+                $"\nJob: {Job}" +
+                $"\nLevel: {Level}" +
+                $"\nSalary: {Convert.ToString(Salary)}" +
+                $"\nCommission: {Commission}" +
+                $"\nDepartments: {Departments}";
+        }
+
     }
 
     public class DepartmentDto
@@ -31,4 +48,5 @@ namespace HYPJCW_HSZFT.Models.DTOs
         public string DepartmentCode { get; set; }
         public string HeadOfDepartment { get; set; }
     }
+
 }
