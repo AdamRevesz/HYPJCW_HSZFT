@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text;
 using System.Xml.Linq;
 using HYPJCW_HSZFT.Logic.Interfaces;
+using HYPJCW_HSZFT.Models.DTOs;
 
 namespace HYPJCW_HSZFT.Client
 {
@@ -22,7 +23,28 @@ namespace HYPJCW_HSZFT.Client
 
         static async Task Main(string[] args)
         {
-            string[] menuItems = { "Read Xml File", "Get Monthly statistics", "Exit" };
+            string[] menuItems = { "Read Xml File", "Export Class Data", "Queries", "Exit" };
+            string[] queryMenuItems =
+            {
+                "List all employees",
+                "Show the rates of employee levels",
+                "List employees that are over or under the average salary",
+                "List employees born in the 80's",
+                "List every employee working in atleast two departments",
+                "List eployees on pension, but still working",
+                "List employees on pension",
+                "Show the average salary of employees on pension",
+                "List employees descending based on salary with pension",
+                "List employees that have a doctor head of department",
+                "List average of salary each level",
+                "Who earns more an average salary junior or a max salary medior?",
+                "List highest commission each level",
+                "Show the employee with the least completed project by years worked",
+                "List employees salary based on birthyear",
+                "Show active employee with the least completed projects",
+                "Show employees with lower salary than employees with higher commission",
+                "Exit back into the main menu"
+            };
             bool exit = false;
 
             while (!exit)
@@ -64,9 +86,9 @@ namespace HYPJCW_HSZFT.Client
                             selectedIndex = (selectedIndex == menuItems.Length - 1) ? 0 : selectedIndex + 1;
                             break;
                     }
-                } while (key != ConsoleKey.Enter); 
+                } while (key != ConsoleKey.Enter);
 
-               
+
                 Console.Clear();
                 if (selectedIndex == 0)
                 {
@@ -80,12 +102,75 @@ namespace HYPJCW_HSZFT.Client
                 }
                 else if (selectedIndex == 2)
                 {
+                    bool queryExit = false;
+                    while (!queryExit)
+                    {
+                        int selectedIndex2 = 0;
+                        ConsoleKey key1;
+                        do
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Use Arrow Keys to navigate and Enter to select:\n");
+
+                            for (int i = 0; i < queryMenuItems.Length; i++)
+                            {
+                                if (i == selectedIndex2)
+                                {
+                                    Console.BackgroundColor = ConsoleColor.Gray;
+                                    Console.ForegroundColor = ConsoleColor.Black;
+                                }
+                                else
+                                {
+                                    Console.ResetColor();
+                                }
+
+                                Console.WriteLine(queryMenuItems[i]);
+                            }
+                            Console.ResetColor();
+
+                            key1 = Console.ReadKey(true).Key;
+
+                            switch (key1)
+                            {
+                                case ConsoleKey.UpArrow:
+                                    selectedIndex2 = (selectedIndex2 == 0) ? queryMenuItems.Length - 1 : selectedIndex2 - 1;
+                                    break;
+
+                                case ConsoleKey.DownArrow:
+                                    selectedIndex2 = (selectedIndex2 == queryMenuItems.Length - 1) ? 0 : selectedIndex2 + 1;
+                                    break;
+                            }
+                        } while (key1 != ConsoleKey.Enter);
+
+                        Console.Clear();
+                        if (selectedIndex2 == queryMenuItems.Length -1)
+                        {
+                            queryExit = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"You selected: {queryMenuItems[selectedIndex2]}");
+                            // Add your query handling logic here
+
+                            Console.WriteLine("Press any key to return to the query menu");
+                            Console.ReadKey();
+                        }
+                    }
+                }
+                else if (selectedIndex == 3)
+                {
                     break;
                 }
                 Console.WriteLine("Press any key to return");
                 Console.ReadKey();
             }
         }
+
+
+        //public void List<EmployeeDto> GetAllEmployees()
+        //{
+
+                //}
 
 
         public static async Task ImportFromXml()
