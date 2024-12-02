@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Employee employeeid="EMP007">
+  <Name>Szabó Márton</Name>
+  <BirthYear>1985</BirthYear>
+  <StartYear>2010</StartYear>
+  <CompletedProjects>250</CompletedProjects>
+  <Active>true</Active>
+  <Retired>false</Retired>
+  <Email>szabo.marton@example.com</Email>
+  <Phone>+36301234567</Phone>
+  <Job>Project Manager</Job>
+  <Level>Senior</Level>
+  <Salary>900000</Salary>
+  <Commission>75000</Commission>
+  <Departments>
+    <Department>
+      <Name>Project Management</Name>
+      <DepartmentCode>PM101</DepartmentCode>
+      <HeadOfDepartment>Szalai Gábor</HeadOfDepartment>
+    </Department>
+    <Department>
+      <Name>Quality Assurance</Name>
+      <DepartmentCode>QA102</DepartmentCode>
+      <HeadOfDepartment>Kiss Tamás</HeadOfDepartment>
+    </Department>
+  </Departments>
+</Employee>
+
+
+<Employee employeeid="EMP008">
+  <Name>Tóth Emese</Name>
+  <BirthYear>1995</BirthYear>
+  <StartYear>2019</StartYear>
+  <CompletedProjects>85</CompletedProjects>
+  <Active>true</Active>
+  <Retired>false</Retired>
+  <Email>toth.emese@example.com</Email>
+  <Phone>+36701234567</Phone>
+  <Job>UX Designer</Job>
+  <Level>Mid</Level>
+  <Salary>550000</Salary>
+  <Commission currency="usd">400</Commission>
+  <Departments>
+    <Department>
+      <Name>Design</Name>
+      <DepartmentCode>DSN101</DepartmentCode>
+      <HeadOfDepartment>Farkas Zoltán</HeadOfDepartment>
+    </Department>
+    <Department>
+      <Name>Marketing</Name>
+      <DepartmentCode>MKT102</DepartmentCode>
+      <HeadOfDepartment>Németh Erika</HeadOfDepartment>
+    </Department>
+  </Departments>
+</Employee>
+
+<Employee employeeid="EMP009">
+  <Name>Horváth Bence</Name>
+  <BirthYear>1978</BirthYear>
+  <StartYear>2005</StartYear>
+  <CompletedProjects>300</CompletedProjects>
+  <Active>false</Active>
+  <Retired>true</Retired>
+  <Email>horvath.bence@example.com</Email>
+  <Phone>+36801234567</Phone>
+  <Job>Chief Technology Officer</Job>
+  <Level>Executive</Level>
+  <Salary>1500000</Salary>
+  <Commission>200000</Commission>
+  <Departments>
+    <Department>
+      <Name>Technology</Name>
+      <DepartmentCode>TECH101</DepartmentCode>
+      <HeadOfDepartment>Horváth Bence</HeadOfDepartment>
+    </Department>
+  </Departments>
+</Employee>
