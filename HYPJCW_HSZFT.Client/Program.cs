@@ -2,6 +2,7 @@
 using HYPJCW_HSZFT.Models.DTOs;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using Newtonsoft.Json;
+using System.Text;
 using System.Text.Json;
 
 namespace HYPJCW_HSZFT.Client
@@ -36,6 +37,16 @@ namespace HYPJCW_HSZFT.Client
                 "Show employees with lower salary than employees with higher commission",
                 "Exit back into the main menu"
             };
+            string[] crudMainMenu =
+            {  
+                "Create",
+                "Read",
+                "Update",
+                "Delete",
+                "Exit"
+            };
+           
+
             bool exit = false;
             while (!exit)
             {
@@ -55,7 +66,7 @@ namespace HYPJCW_HSZFT.Client
                         await ExportClasses();
                         break;
                     case 3:
-                        
+                        HandleMainCrud(crudMainMenu);
                         break;
                     case 4:
                         GraphOfSalaries(await GetAllEmployeesList());
@@ -147,6 +158,590 @@ namespace HYPJCW_HSZFT.Client
                 }
             }
         }
+        static async Task HandleMainCrud(string[] crudMainMenu)
+        {
+            bool queryExit = false;
+            while (!queryExit)
+            {
+                int selectedIndex = DisplayMenu(crudMainMenu);
+                Console.Clear();
+                if (selectedIndex == 0)
+                {
+                    CreateMenu();
+                }
+                else if (selectedIndex == 1)
+                {
+                    ReadMenu();
+                }
+                else if(selectedIndex == 2)
+                {
+                    DeleteMenu();
+                }
+                else if (selectedIndex == 2)
+                {
+                    UpdateMenu();
+                }
+                else if (selectedIndex == crudMainMenu.Length - 1)
+                {
+                    queryExit = true;
+                }
+                else
+                {
+                    Console.WriteLine($"You selected: {crudMainMenu[selectedIndex]}");
+                    // Add your query handling logic here
+                    Console.WriteLine("Press any key to return to the query menu");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        public static async Task CreateMenu()
+        {
+            bool queryExit = false;
+            Console.WriteLine("Please select an entity to create:");
+            Console.WriteLine("E - Employee");
+            Console.WriteLine("M - Manager");
+            Console.WriteLine("D - Department");
+            Console.WriteLine("ESC - Leave the menu");
+            Console.WriteLine("Press the corresponding key to select.");
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            if (!queryExit)
+            {
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.E:
+                        CreateEmployee();
+                        break;
+                    case ConsoleKey.M:
+                        await CreateManager();
+                        break;
+                    case ConsoleKey.D:
+                        await CreateDepartment();
+                        break;
+                    case ConsoleKey.Escape:
+                        queryExit = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+        }
+
+        static async Task ReadMenu()
+        {
+            Console.WriteLine("Please select an entity to read:");
+            Console.WriteLine("E - Employee");
+            Console.WriteLine("M - Manager");
+            Console.WriteLine("D - Department");
+            Console.WriteLine("Press the corresponding key to select.");
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.E:
+                    await ReadEmployee();
+                    break;
+                case ConsoleKey.M:
+                    await ReadManager();
+                    break;
+                case ConsoleKey.D:
+                    await ReadDepartment();
+                    break;
+                default:
+                    Console.WriteLine("Invalid selection. Please try again.");
+                    break;
+            }
+        }
+        static async Task UpdateMenu()
+        {
+            Console.WriteLine("Please select an entity to update:");
+            Console.WriteLine("E - Employee");
+            Console.WriteLine("M - Manager");
+            Console.WriteLine("D - Department");
+            Console.WriteLine("Press the corresponding key to select.");
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.E:
+                    await UpdateEmployee();
+                    break;
+                case ConsoleKey.M:
+                    await UpdateManager();
+                    break;
+                case ConsoleKey.D:
+                    await UpdateDepartment();
+                    break;
+                default:
+                    Console.WriteLine("Invalid selection. Please try again.");
+                    break;
+            }
+        }
+        static async Task DeleteMenu()
+        {
+            Console.WriteLine("Please select an entity to delete:");
+            Console.WriteLine("E - Employee");
+            Console.WriteLine("M - Manager");
+            Console.WriteLine("D - Department");
+            Console.WriteLine("Press the corresponding key to select.");
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.E:
+                    await DeleteEmployee();
+                    break;
+                case ConsoleKey.M:
+                    await DeleteManager();
+                    break;
+                case ConsoleKey.D:
+                    await DeleteDepartment();
+                    break;
+                default:
+                    Console.WriteLine("Invalid selection. Please try again.");
+                    break;
+            }
+        }
+        //Create
+        static async Task CreateEmployee()
+        {
+            Console.Clear();
+            Console.WriteLine("Creating a new Employee.");
+
+            Console.WriteLine("Enter Employee ID:");
+            string employeeId = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Name:");
+            string name = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Birth Year:");
+            int birthYear = int.Parse(Console.ReadLine() ?? "0");
+
+            Console.WriteLine("Enter Start Year:");
+            int startYear = int.Parse(Console.ReadLine() ?? "0");
+
+            Console.WriteLine("Enter Completed Projects:");
+            int completedProjects = int.Parse(Console.ReadLine() ?? "0");
+
+            Console.WriteLine("Is Active? (true/false):");
+            bool active = bool.Parse(Console.ReadLine() ?? "false");
+
+            Console.WriteLine("Is Retired? (true/false):");
+            bool retired = bool.Parse(Console.ReadLine() ?? "false");
+
+            Console.WriteLine("Enter Email:");
+            string email = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Phone:");
+            string phone = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Job:");
+            string job = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Level:");
+            string level = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Salary:");
+            int salary = int.Parse(Console.ReadLine() ?? "0");
+
+            Console.WriteLine("Enter Commission:");
+            string commission = Console.ReadLine() ?? "";
+
+            var departments = "";
+
+            // Create a new EmployeeDto object
+            var newEmployee = new EmployeeDto
+            {
+                EmployeeId = employeeId,
+                Name = name,
+                BirthYear = birthYear,
+                StartYear = startYear,
+                CompletedProjects = completedProjects,
+                Active = active,
+                Retired = retired,
+                Email = email,
+                Phone = phone,
+                Job = job,
+                Level = level,
+                Salary = salary,
+                Commission = commission,
+                Departments = new List<DepartmentDto>() 
+            };
+
+            // Call CreateEntity method
+            bool success = await CreateEntity(newEmployee, "/Employees");
+
+            if (success)
+            {
+                Console.WriteLine("Employee created successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to create employee.");
+            }
+        }
+        static async Task CreateManager()
+        {
+            Console.Clear();
+            Console.WriteLine("Creating a new Manager.");
+
+            Console.WriteLine("Enter Manager ID:");
+            string managerId = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Name:");
+            string name = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Birth Year:");
+            int birthYear = int.Parse(Console.ReadLine() ?? "0");
+
+            Console.WriteLine("Enter Start Of Employment:");
+            string startOfEmployment = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Has MBA? (true/false):");
+            bool hasMba = bool.Parse(Console.ReadLine() ?? "false");
+
+            // Create a new Managers object
+            var newManager = new Managers
+            {
+                ManagerId = managerId,
+                Name = name,
+                BirthYear = birthYear,
+                StartOfEmployment = startOfEmployment,
+                HasMba = hasMba
+            };
+
+            // Call CreateEntity method
+            bool success = await CreateEntity(newManager, "/Managers");
+
+            if (success)
+            {
+                Console.WriteLine("Manager created successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to create manager.");
+            }
+        }
+        static async Task CreateDepartment()
+        {
+            Console.Clear();
+            Console.WriteLine("Creating a new Department.");
+
+            Console.WriteLine("Enter Department Code:");
+            string departmentCode = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Name:");
+            string name = Console.ReadLine() ?? "";
+
+            Console.WriteLine("Enter Head Of Department:");
+            string headOfDepartment = Console.ReadLine() ?? "";
+
+            // Optionally, you can add code to select Employees
+
+            // Create a new Departments object
+            var newDepartment = new Departments
+            {
+                DepartmentCode = departmentCode,
+                Name = name,
+                HeadOfDepartment = headOfDepartment,
+            };
+
+            // Call CreateEntity method
+            bool success = await CreateEntity(newDepartment, "/Departments");
+
+            if (success)
+            {
+                Console.WriteLine("Department created successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to create department.");
+            }
+        }
+        //Read
+        static async Task ReadEmployee()
+        {
+            Console.Clear();
+            Console.WriteLine("Reading an Employee.");
+
+            Console.WriteLine("Enter Employee ID:");
+            string employeeId = Console.ReadLine() ?? "";
+
+            var employees = await ReadEntity<EmployeeDto>(employeeId, "Employees");
+
+            if (employees.Any())
+            {
+                StringFromList(employees);
+            }
+            else
+            {
+                Console.WriteLine("No employee found with the given ID.");
+            }
+        }
+        static async Task ReadManager()
+        {
+            Console.Clear();
+            Console.WriteLine("Reading a Manager.");
+
+            Console.WriteLine("Enter Manager ID:");
+            string managerId = Console.ReadLine() ?? "";
+
+            var managers = await ReadEntity<Managers>(managerId, "Managers");
+
+            if (managers.Any())
+            {
+                StringFromList(managers);
+            }
+            else
+            {
+                Console.WriteLine("No manager found with the given ID.");
+            }
+        }
+        static async Task ReadDepartment()
+        {
+            Console.Clear();
+            Console.WriteLine("Reading a Department.");
+
+            Console.WriteLine("Enter Department Code:");
+            string departmentCode = Console.ReadLine() ?? "";
+
+            var departments = await ReadEntity<Departments>(departmentCode, "Departments");
+
+            if (departments.Any())
+            {
+                StringFromList(departments);
+            }
+            else
+            {
+                Console.WriteLine("No department found with the given code.");
+            }
+        }
+        //Update
+        static async Task UpdateEmployee()
+        {
+            Console.Clear();
+            Console.WriteLine("Updating an Employee.");
+
+            Console.WriteLine("Enter Employee ID:");
+            string employeeId = Console.ReadLine() ?? "";
+
+            // Fetch the existing employee data
+            var employees = await ReadEntity<EmployeeDto>(employeeId, "Employees");
+            if (!employees.Any())
+            {
+                Console.WriteLine("No employee found with the given ID.");
+                return;
+            }
+
+            var employee = employees.First();
+
+            // Update the employee data
+            Console.WriteLine("Enter Name (leave blank to keep current value):");
+            string name = Console.ReadLine();
+            if (!string.IsNullOrEmpty(name)) employee.Name = name;
+
+            Console.WriteLine("Enter Birth Year (leave blank to keep current value):");
+            string birthYearInput = Console.ReadLine();
+            if (int.TryParse(birthYearInput, out int birthYear)) employee.BirthYear = birthYear;
+
+            Console.WriteLine("Enter Start Year (leave blank to keep current value):");
+            string startYearInput = Console.ReadLine();
+            if (int.TryParse(startYearInput, out int startYear)) employee.StartYear = startYear;
+
+            Console.WriteLine("Enter Completed Projects (leave blank to keep current value):");
+            string completedProjectsInput = Console.ReadLine();
+            if (int.TryParse(completedProjectsInput, out int completedProjects)) employee.CompletedProjects = completedProjects;
+
+            Console.WriteLine("Is Active? (true/false, leave blank to keep current value):");
+            string activeInput = Console.ReadLine();
+            if (bool.TryParse(activeInput, out bool active)) employee.Active = active;
+
+            Console.WriteLine("Is Retired? (true/false, leave blank to keep current value):");
+            string retiredInput = Console.ReadLine();
+            if (bool.TryParse(retiredInput, out bool retired)) employee.Retired = retired;
+
+            Console.WriteLine("Enter Email (leave blank to keep current value):");
+            string email = Console.ReadLine();
+            if (!string.IsNullOrEmpty(email)) employee.Email = email;
+
+            Console.WriteLine("Enter Phone (leave blank to keep current value):");
+            string phone = Console.ReadLine();
+            if (!string.IsNullOrEmpty(phone)) employee.Phone = phone;
+
+            Console.WriteLine("Enter Job (leave blank to keep current value):");
+            string job = Console.ReadLine();
+            if (!string.IsNullOrEmpty(job)) employee.Job = job;
+
+            Console.WriteLine("Enter Level (leave blank to keep current value):");
+            string level = Console.ReadLine();
+            if (!string.IsNullOrEmpty(level)) employee.Level = level;
+
+            Console.WriteLine("Enter Salary (leave blank to keep current value):");
+            string salaryInput = Console.ReadLine();
+            if (int.TryParse(salaryInput, out int salary)) employee.Salary = salary;
+
+            Console.WriteLine("Enter Commission (leave blank to keep current value):");
+            string commission = Console.ReadLine();
+            if (!string.IsNullOrEmpty(commission)) employee.Commission = commission;
+
+            // Optionally, you can add code to update Departments
+
+            // Call UpdateEntity method
+            bool success = await UpdateEntity(employeeId, employee, "Employees");
+
+            if (success)
+            {
+                Console.WriteLine("Employee updated successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to update employee.");
+            }
+        }
+        static async Task UpdateManager()
+        {
+            Console.Clear();
+            Console.WriteLine("Updating a Manager.");
+
+            Console.WriteLine("Enter Manager ID:");
+            string managerId = Console.ReadLine() ?? "";
+
+            // Fetch the existing manager data
+            var managers = await ReadEntity<Managers>(managerId, "Managers");
+            if (!managers.Any())
+            {
+                Console.WriteLine("No manager found with the given ID.");
+                return;
+            }
+
+            var manager = managers.First();
+
+            // Update the manager data
+            Console.WriteLine("Enter Name (leave blank to keep current value):");
+            string name = Console.ReadLine();
+            if (!string.IsNullOrEmpty(name)) manager.Name = name;
+
+            Console.WriteLine("Enter Birth Year (leave blank to keep current value):");
+            string birthYearInput = Console.ReadLine();
+            if (int.TryParse(birthYearInput, out int birthYear)) manager.BirthYear = birthYear;
+
+            Console.WriteLine("Enter Start Of Employment (leave blank to keep current value):");
+            string startOfEmployment = Console.ReadLine();
+            if (!string.IsNullOrEmpty(startOfEmployment)) manager.StartOfEmployment = startOfEmployment;
+
+            Console.WriteLine("Has MBA? (true/false, leave blank to keep current value):");
+            string hasMbaInput = Console.ReadLine();
+            if (bool.TryParse(hasMbaInput, out bool hasMba)) manager.HasMba = hasMba;
+
+            // Call UpdateEntity method
+            bool success = await UpdateEntity(managerId, manager, "Managers");
+
+            if (success)
+            {
+                Console.WriteLine("Manager updated successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to update manager.");
+            }
+        }
+        static async Task UpdateDepartment()
+        {
+            Console.Clear();
+            Console.WriteLine("Updating a Department.");
+
+            Console.WriteLine("Enter Department Code:");
+            string departmentCode = Console.ReadLine() ?? "";
+
+            // Fetch the existing department data
+            var departments = await ReadEntity<Departments>(departmentCode, "Departments");
+            if (!departments.Any())
+            {
+                Console.WriteLine("No department found with the given code.");
+                return;
+            }
+
+            var department = departments.First();
+
+            // Update the department data
+            Console.WriteLine("Enter Name (leave blank to keep current value):");
+            string name = Console.ReadLine();
+            if (!string.IsNullOrEmpty(name)) department.Name = name;
+
+            Console.WriteLine("Enter Head Of Department (leave blank to keep current value):");
+            string headOfDepartment = Console.ReadLine();
+            if (!string.IsNullOrEmpty(headOfDepartment)) department.HeadOfDepartment = headOfDepartment;
+
+            // Optionally, you can add code to update Employees
+
+            // Call UpdateEntity method
+            bool success = await UpdateEntity(departmentCode, department, "Departments");
+
+            if (success)
+            {
+                Console.WriteLine("Department updated successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to update department.");
+            }
+        }
+        //Delete
+        static async Task DeleteEmployee()
+        {
+            Console.Clear();
+            Console.WriteLine("Deleting an Employee.");
+
+            Console.WriteLine("Enter Employee ID:");
+            string employeeId = Console.ReadLine() ?? "";
+
+            bool success = await DeleteEntity<EmployeeDto>(employeeId, "Employees");
+
+            if (success)
+            {
+                Console.WriteLine("Employee deleted successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to delete employee.");
+            }
+        }
+        static async Task DeleteManager()
+        {
+            Console.Clear();
+            Console.WriteLine("Deleting a Manager.");
+
+            Console.WriteLine("Enter Manager ID:");
+            string managerId = Console.ReadLine() ?? "";
+
+            bool success = await DeleteEntity<Managers>(managerId, "Managers");
+
+            if (success)
+            {
+                Console.WriteLine("Manager deleted successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to delete manager.");
+            }
+        }
+        static async Task DeleteDepartment()
+        {
+            Console.Clear();
+            Console.WriteLine("Deleting a Department.");
+
+            Console.WriteLine("Enter Department Code:");
+            string departmentCode = Console.ReadLine() ?? "";
+
+            bool success = await DeleteEntity<Departments>(departmentCode, "Departments");
+
+            if (success)
+            {
+                Console.WriteLine("Department deleted successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Failed to delete department.");
+            }
+        }
         //Menu stops here
 
         //Export class data
@@ -219,8 +814,92 @@ namespace HYPJCW_HSZFT.Client
             }
             return true;
         }
+        //Create() Methods
+        public static async Task<bool> CreateEntity<T>(T item, string endpoint) where T : class
+        {
+            var url = $"{baseUrl}/{endpoint}";
+            using var client = new HttpClient();
+
+            var jsonString = JsonConvert.SerializeObject(item);
+            var content = new StringContent(jsonString);
+
+            try
+            {
+                var response = await client.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return false;
+            }
+        }
+        //Read Method
+        public static async Task<List<T>> ReadEntity<T>(string id, string endpoint) where T : class
+        {
+            var url = baseUrl + $"/{endpoint}/{id}";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var entities = JsonConvert.DeserializeObject<List<T>>(responseBody);
+                return entities ?? new List<T>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new List<T>();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        public static async Task<bool> UpdateEntity<T>(string id, T item, string endpoint) where T : class
+        {
+            var url = $"{baseUrl}/{endpoint}/{id}";
+            using var client = new HttpClient();
+
+            var jsonString = JsonConvert.SerializeObject(item);
+            var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PutAsync(url, content);
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return false;
+            }
+        }
+        //Delete method
+        public static async Task<bool> DeleteEntity<T>(string id, string endpoint) where T : class
+        {
+            var url = $"{baseUrl}/{endpoint}/{id}";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.DeleteAsync(url);
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return false;
+            }
+        }
+
         //ReadAll() methods
-          //Employees
+        //Employees
         public static async Task<List<EmployeeDto>> GetAllEmployeesList()
         {
             var url = baseUrl + "/Employees";
@@ -270,11 +949,9 @@ namespace HYPJCW_HSZFT.Client
                 throw;
             }
         }
-        //Read Methods
-          //Employee
-        public static async Task<List<EmployeeDto>> GetEmployee(string Id)
+        public static async Task<List<Departments>> GetAllDepartments()
         {
-            var url = baseUrl + "/Employees/{id}";
+            var url = baseUrl + "/Managers";
             using var client = new HttpClient();
             try
             {
@@ -282,13 +959,13 @@ namespace HYPJCW_HSZFT.Client
                 response.EnsureSuccessStatusCode();
                 var responseBody = await response.Content.ReadAsStringAsync();
 
-                var employees = JsonConvert.DeserializeObject<List<EmployeeDto>>(responseBody);
-                return employees ?? new List<EmployeeDto>();
+                var managers = JsonConvert.DeserializeObject<List<Departments>>(responseBody);
+                return managers ?? new List<Departments>();
             }
             catch (HttpRequestException ex)
             {
                 Console.WriteLine($"There was an error: {ex.Message}");
-                return new List<EmployeeDto>();
+                return new List<Departments>();
             }
             catch (ArgumentException ex)
             {
@@ -296,7 +973,6 @@ namespace HYPJCW_HSZFT.Client
                 throw;
             }
         }
-
         //Show the rates of employees per level
         public static async Task<bool> ShowRatesOfEmployees()
         {
@@ -331,7 +1007,6 @@ namespace HYPJCW_HSZFT.Client
             }
             return true;
         }
-
         //Generic Methods to print out the API calls
         public static void StringFromList<T>(List<T> list) where T : class
         {
@@ -341,7 +1016,6 @@ namespace HYPJCW_HSZFT.Client
                 Console.WriteLine(new string('-', 20));
             }
         }
-
         //Calling the method recursively when encountering a nested list
         private static void PrintProperties(object item)
         {
@@ -370,9 +1044,6 @@ namespace HYPJCW_HSZFT.Client
                 }
             }
         }
-
-        //GraphOfEmployeeSalary
-        
         //Graph Design
         public static string GraphGraphic(int amount)
         {

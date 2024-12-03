@@ -15,7 +15,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             this.managerLogic = managerLogic;
         }
 
-        [HttpPost]
+        [HttpPost("/Managers")]
         public IActionResult Create([FromBody] Managers manager)
         {
             try

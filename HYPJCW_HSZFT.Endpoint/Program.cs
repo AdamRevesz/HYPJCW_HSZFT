@@ -26,6 +26,7 @@ namespace HYPJCW_HSZFT.Endpoint
             builder.Services.AddScoped<IMixedLogic, MixedLogic>();
             builder.Services.AddScoped<IImportLogic, ImportLogic>();
             builder.Services.AddScoped<IExportLogic, ExportLogic>();
+            builder.Services.AddScoped<IDepartmentLogic, DepartmentLogic>();
 
 
             builder.Services.AddDbContext<MainDbContext>(options =>
