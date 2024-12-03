@@ -22,7 +22,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         List<Employees> GetEmployeesOnPension();
         double GetAverageOfSalaryOfEmployeesOnPension();
         IEnumerable<EmployeeDto> GetWorkersDescSalaryWithCommission();
-        void GetRatesOfEmployeeLevels();
+        LevelDto GetRatesOfEmployeeLevels();
         List<Employees> GetEmployeesOfDepartmentWithDoctorateManager();
         string GetNumberOfEmployeesUnderOrOverTheAverageSalary();
         Dictionary<string, double> GetAverageOfSalaryEachLevel();

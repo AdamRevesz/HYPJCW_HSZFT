@@ -41,18 +41,17 @@ namespace HYPJCW_HSZFT.Logic
                 Level = e.Level,
                 Salary = e.Salary,
                 Commission = e.Commission,
-                Departments = e.Departments.Select(d => new DepartmentDto
+                Departments = e.Departments?.Select(d => new DepartmentDto
                 {
                     Name = d.Name,
                     DepartmentCode = d.DepartmentCode,
                     HeadOfDepartment = d.HeadOfDepartment
-                }).ToList()
+                }).ToList() ?? new List<DepartmentDto>()
             }).ToList();
-
             return employeeDtos;
         }
 
-        public void GetRatesOfEmployeeLevels()
+        public LevelDto GetRatesOfEmployeeLevels()
         {
             LevelDto rate = new LevelDto();
             var employees = employeeRepo.ReadAll();
@@ -71,25 +70,19 @@ namespace HYPJCW_HSZFT.Logic
                 {
                     case "junior":
                         rate.Junior = group.Count;
-                        Console.WriteLine($"\nJunior: {Graphlogic.GraphGraphicSmallNumber(rate.Junior)} {rate.Junior}");
                         break;
                     case "medior":
                         rate.Medior = group.Count;
-                        Console.WriteLine($"\nMedior: {Graphlogic.GraphGraphicSmallNumber(rate.Medior)} {rate.Medior}");
-
                         break;
                     case "senior":
                         rate.Senior = group.Count;
-                        Console.WriteLine($"\nSenior: {Graphlogic.GraphGraphicSmallNumber(rate.Senior)} {rate.Senior}");
-
                         break;
                     default:
                         rate.None = group.Count;
-                        Console.WriteLine($"\nNone: {Graphlogic.GraphGraphicSmallNumber(rate.None)} {rate.None}");
                         break;
                 }
             }
-
+            return rate;
         }
 
         public string GetNumberOfEmployeesUnderOrOverTheAverageSalary()

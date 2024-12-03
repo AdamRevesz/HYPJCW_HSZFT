@@ -109,5 +109,7 @@ namespace HYPJCW_HSZFT.Logic
             }
             throw new ArgumentException("They worked the same years");
         }
+
+        
     }
 }

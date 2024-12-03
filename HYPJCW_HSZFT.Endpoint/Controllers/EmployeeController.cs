@@ -47,9 +47,9 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/levelrates")]
-        public void RateOfLevels()
+        public LevelDto RateOfLevels()
         {
-            this.logic.GetRatesOfEmployeeLevels();
+            return this.logic.GetRatesOfEmployeeLevels();
         }
 
         [HttpGet("/Employees/underoroveravrsalary")]

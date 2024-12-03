@@ -19,7 +19,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
         List<Managers> GetAllManagersWithDoctorateWithouthMba();
         Managers GetLongestWorkingManager();
         Managers GetLongestWorkingManagerComparedToHisAge();
-        void GetRateOfManagersWithMbaAndWithout();
+        MbaRateDto GetRateOfManagersWithMbaAndWithout();
         
     }
 }

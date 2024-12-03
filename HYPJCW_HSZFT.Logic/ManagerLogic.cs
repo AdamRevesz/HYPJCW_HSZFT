@@ -115,7 +115,7 @@ namespace HYPJCW_HSZFT.Logic
                 .Where(m => m.Name.ToLower().Contains("dr.")).ToList();
         }
 
-        public void GetRateOfManagersWithMbaAndWithout()
+        public MbaRateDto GetRateOfManagersWithMbaAndWithout()
         {
             MbaRateDto rate = new MbaRateDto();
             var managers = managerRepo.ReadAll();
@@ -128,17 +128,7 @@ namespace HYPJCW_HSZFT.Logic
                     Count = g.Count()
                 })
                 .ToList();
-
-            foreach (var group in grouped)
-            {
-                if (group.HasMba)
-                {
-                    rate.WithMba = group.Count;
-                    Console.WriteLine($"\nHasMBA: {Graphlogic.GraphGraphicSmallNumber(rate.WithMba)} {rate.WithMba}");
-                }
-                rate.WithoutMba = group.Count;
-                Console.WriteLine($"\nWithoutMBA: {Graphlogic.GraphGraphicSmallNumber(rate.WithoutMba)} {rate.WithoutMba}");
-            }
+            return rate;
         }
 
         public Managers Read(string id)
