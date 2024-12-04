@@ -61,6 +61,7 @@ namespace HYPJCW_HSZFT.Models.DTOs
 
     }
 
+    [Serializable]
     public class DepartmentDto
     {
         [JsonPropertyName("name")]

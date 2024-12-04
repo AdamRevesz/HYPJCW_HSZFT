@@ -23,7 +23,7 @@ namespace HYPJCW_HSZFT.Repository
 
         public List<Employees> ReadAll()
         {
-            return ctx.Employees.Include(e => e.Departments).ToList();
+            return ctx.Employees.Include(e => e.Departments.OrderBy(d => d.Name)).ToList();
         }
 
         public override void Update(Employees item)

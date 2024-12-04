@@ -31,7 +31,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             }
         }
 
-        [HttpDelete("/Delete{id}")]
+        [HttpDelete("/Department/{id}")]
         public IActionResult Delete(string id)
         {
             try
@@ -45,7 +45,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             }
         }
 
-        [HttpGet("/Read{id}")]
+        [HttpGet("/Department/{id}")]
         public ActionResult<Departments> Read(string id)
         {
             try
@@ -59,14 +59,14 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("/Departments")]
         public ActionResult<List<Departments>> ReadAll()
         {
             var managers = departmentLogic.ReadAll();
             return Ok(managers);
         }
 
-        [HttpPut("/Update{id}")]
+        [HttpPut("/Department/{id}")]
         public IActionResult Update(string id, [FromBody] Departments manager)
         {
             try

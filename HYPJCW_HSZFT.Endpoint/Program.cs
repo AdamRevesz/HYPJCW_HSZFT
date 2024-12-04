@@ -20,7 +20,6 @@ namespace HYPJCW_HSZFT.Endpoint
             builder.Services.AddTransient<IRepository<Employees>, EmployeeRepository>();
             builder.Services.AddTransient<IRepository<Managers>, ManagersRepository>();
             builder.Services.AddTransient<IRepository<Departments>, DepartmentsRepository>();
-            builder.Services.AddTransient<IRepository<EmployeesOfDepartments>, EmployeesOfDepartmentsRepository>();
             builder.Services.AddScoped<IEmployeesLogic, EmployeeLogic>();
             builder.Services.AddScoped<IManagerLogic, ManagerLogic>();
             builder.Services.AddScoped<IMixedLogic, MixedLogic>();
@@ -47,7 +46,7 @@ namespace HYPJCW_HSZFT.Endpoint
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WaterLevel Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HSZFT", Version = "v1" });
             });
 
             var app = builder.Build();

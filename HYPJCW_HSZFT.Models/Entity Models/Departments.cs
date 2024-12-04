@@ -1,8 +1,10 @@
 ﻿using HYPJCW_HSZFT.Entities.Dependencies;
 using HYPJCW_HSZFT.Models.Entity_Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +20,11 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public string DepartmentCode { get; set; }
         [MaxLength(200)]
         public string HeadOfDepartment { get; set; }
+        //[JsonIgnore]
+        //[NotMapped]
         public virtual ICollection<Employees> Employees{ get; set; }
+        //[JsonIgnore]
+        //[NotMapped]
         public virtual ICollection<EmployeesOfDepartments> EmployeesOfDepartments { get; set; }
 
 
@@ -32,6 +38,12 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
 
         public Departments() { }
 
+        public override string ToString()
+        {
+            return $"Department Name: {Name}" +
+                $"Department Code: {DepartmentCode}" +
+                $"Head of department: {HeadOfDepartment}";
+        }
 
     }
 }

@@ -158,7 +158,7 @@ namespace HYPJCW_HSZFT.Logic
         {
             var everyEmployee = employeeRepo.ReadAll();
             var employeesOnPension = everyEmployee.Where(e => e.Retired && !e.Active).ToList();
-            if(employeesOnPension is null)
+            if (employeesOnPension is null)
             {
                 throw new ArgumentException("There are no employees on Pension");
             }
@@ -278,7 +278,7 @@ namespace HYPJCW_HSZFT.Logic
                 Name = employeLeast.Name,
                 CompletedProjects = employeLeast.CompletedProjects
             };
-               
+
 
         }
 
@@ -309,13 +309,13 @@ namespace HYPJCW_HSZFT.Logic
                 throw new ArgumentException();
             }
             return new EmployeeDto
-                {
-                    Name = employee.Name,
-                    CompletedProjects = employee.CompletedProjects,
-                    Active = employee.Active,
-                    Salary = employee.Salary,
-                    StartYear = employee.StartYear
-                };
+            {
+                Name = employee.Name,
+                CompletedProjects = employee.CompletedProjects,
+                Active = employee.Active,
+                Salary = employee.Salary,
+                StartYear = employee.StartYear
+            };
         }
 
         public (List<EmployeeDto>? EmployeesWithHigherCommission, List<EmployeeDto>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary()
@@ -373,26 +373,38 @@ namespace HYPJCW_HSZFT.Logic
             employeeRepo.Create(item);
         }
 
-        public EmployeesShortViewDto Read(string id)
+        public EmployeeDto Read(string id)
         {
             var employee = employeeRepo.Read(id);
-            if (employee is null)
+            if (employee == null)
             {
                 throw new ArgumentException("Employee not found");
             }
-            return new EmployeesShortViewDto
-            {
-                Name = employee.Name,
-                Salary = employee.Salary,
-                Commisison = employee.Commission,
-                Departments = employee.Departments.Select(d => new DepartmentDto
+            var employeeDto =
+                new EmployeeDto
                 {
-                    Name = d.Name,
-                    DepartmentCode = d.DepartmentCode,
-                    HeadOfDepartment = d.HeadOfDepartment
-                }).ToList(),
-            };
-
+                    EmployeeId = employee.EmployeeId,
+                    Name = employee.Name,
+                    BirthYear = employee.BirthYear,
+                    StartYear = employee.StartYear,
+                    CompletedProjects = employee.CompletedProjects,
+                    Active = employee.Active,
+                    Retired = employee.Retired,
+                    Email = employee.Email,
+                    Phone = employee.Phone,
+                    Job = employee.Job,
+                    Level = employee.Level,
+                    Salary = employee.Salary,
+                    Commission = employee.Commission,
+                    Departments = employee.Departments?.Select(d => new DepartmentDto
+                    {
+                        Name = d.Name,
+                        DepartmentCode = d.DepartmentCode,
+                        HeadOfDepartment = d.HeadOfDepartment
+                    }).ToList() ?? new List<DepartmentDto>()
+                };
+            
+            return employeeDto;
         }
 
         public void Update(Employees item, string id)

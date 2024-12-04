@@ -11,7 +11,7 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
     public interface IEmployeesLogic
     {
         void Create(Employees item);
-        EmployeesShortViewDto Read(string id);
+        EmployeeDto Read(string id);
         void Update(Employees item, string id);
         List<EmployeeDto> ReadAll();
         void Delete(string id);

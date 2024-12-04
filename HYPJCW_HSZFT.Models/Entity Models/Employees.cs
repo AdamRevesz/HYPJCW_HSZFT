@@ -1,13 +1,16 @@
 ﻿using HYPJCW_HSZFT.Entities.Dependencies;
+using HYPJCW_HSZFT.Models.DTOs;
 using HYPJCW_HSZFT.Models.Entity_Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+
 
 namespace HYPJCW_HSZFT.Entities.Entity_Models
 {
@@ -31,7 +34,11 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public string Level { get; set; }
         public int Salary { get; set; }
         public string Commission { get; set; } = "";
+        //[JsonIgnore]
+        //[NotMapped]
         public virtual ICollection<Departments> Departments { get; set; }
+        //[JsonIgnore]
+        //[NotMapped]
         public virtual ICollection<EmployeesOfDepartments> EmployeesOfDepartments { get; set; }
 
         public Employees(
@@ -56,5 +63,27 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         }
         public Employees() { }
 
+        public Employees(EmployeeDto employeeDto)
+        {
+            EmployeeId = employeeDto.EmployeeId ?? string.Empty;
+            Name = employeeDto.Name ?? string.Empty;
+            BirthYear = employeeDto.BirthYear ?? default;
+            StartYear = employeeDto.StartYear ?? default;
+            CompletedProjects = employeeDto.CompletedProjects ?? default;
+            Active = employeeDto.Active;
+            Retired = employeeDto.Retired;
+            Email = employeeDto.Email ?? string.Empty;
+            Phone = employeeDto.Phone ?? string.Empty;
+            Job = employeeDto.Job ?? string.Empty;
+            Level = employeeDto.Level ?? string.Empty;
+            Salary = employeeDto.Salary ?? default;
+            Commission = employeeDto.Commission ?? string.Empty;
+            Departments = employeeDto.Departments?.Select(d => new Departments
+            {
+                Name = d.Name,
+                DepartmentCode = d.DepartmentCode,
+                HeadOfDepartment = d.HeadOfDepartment
+            }).ToList() ?? new List<Departments>();
+        }
     }
 }

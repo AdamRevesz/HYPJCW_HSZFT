@@ -30,5 +30,14 @@ namespace HYPJCW_HSZFT.Models.Entity_Models
             StartOfEmployment = startOfEmployment;
             HasMba = hasMBA;
         }
+
+        public override string ToString()
+        {
+            return $"Name: {Name}" +
+                $"Manager Id: {ManagerId}" +
+                $"Birthyear: {BirthYear}" +
+                $"Start of Employment {StartOfEmployment}" +
+                $"MBA: {(HasMba ? "Has MBA" : "Does not have MBA")}";
+        }
     }
 }

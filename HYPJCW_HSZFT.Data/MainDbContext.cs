@@ -14,7 +14,6 @@ namespace HYPJCW_HSZFT.Data
         public DbSet<Employees> Employees { get; set; }
         public DbSet<Departments> Departments { get; set; }
         public DbSet<Managers> Managers { get; set; }
-        public DbSet<EmployeesOfDepartments> EmployeesOfDepartments { get; set; }
 
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
@@ -26,6 +25,15 @@ namespace HYPJCW_HSZFT.Data
             {
                 entity.HasKey(e => e.EmployeeId);
             });
+            mod.Entity<Employees>(entity =>
+            {
+                entity.HasMany(e => e.Departments)
+                      .WithMany(d => d.Employees)
+                      .UsingEntity<Dictionary<string, object>>(
+                          "EmployeeDepartment",
+                          j => j.HasOne<Departments>().WithMany().HasForeignKey("DepartmentCode"),
+                          j => j.HasOne<Employees>().WithMany().HasForeignKey("EmployeeId"));
+            });
 
             mod.Entity<Departments>(entity =>
             {
@@ -35,19 +43,6 @@ namespace HYPJCW_HSZFT.Data
             mod.Entity<Managers>(entity =>
             {
                 entity.HasKey(x => x.ManagerId);
-            });
-
-            mod.Entity<EmployeesOfDepartments>(entity =>
-            {
-                entity.HasKey(e => e.EmployeesOfDepartmentsId);
-
-                entity.HasOne(eod => eod.Employee)
-                    .WithMany(e => e.EmployeesOfDepartments)
-                    .HasForeignKey(eod => eod.EmployeeId);
-
-                entity.HasOne(e => e.Department)
-                    .WithMany(d => d.EmployeesOfDepartments)
-                    .HasForeignKey(eod => eod.DepartmentId);
             });
             base.OnModelCreating(mod);
         }

@@ -38,14 +38,14 @@ namespace HYPJCW_HSZFT.Client
                 "Exit back into the main menu"
             };
             string[] crudMainMenu =
-            {  
+            {
                 "Create",
                 "Read",
                 "Update",
                 "Delete",
                 "Exit"
             };
-           
+
 
             bool exit = false;
             while (!exit)
@@ -66,7 +66,7 @@ namespace HYPJCW_HSZFT.Client
                         await ExportClasses();
                         break;
                     case 3:
-                        HandleMainCrud(crudMainMenu);
+                       await HandleMainCrud(crudMainMenu);
                         break;
                     case 4:
                         GraphOfSalaries(await GetAllEmployeesList());
@@ -140,7 +140,7 @@ namespace HYPJCW_HSZFT.Client
                 }
                 else if (selectedIndex2 == 1)
                 {
-                    ShowRatesOfEmployees();
+                    await ShowRatesOfEmployees();
                     Console.WriteLine("Press any key to continue");
                     Console.ReadLine();
                     Console.Clear();
@@ -165,21 +165,22 @@ namespace HYPJCW_HSZFT.Client
             {
                 int selectedIndex = DisplayMenu(crudMainMenu);
                 Console.Clear();
+                ClearInputBuffer();
                 if (selectedIndex == 0)
                 {
-                    CreateMenu();
+                    await CreateMenu();
                 }
                 else if (selectedIndex == 1)
                 {
-                    ReadMenu();
-                }
-                else if(selectedIndex == 2)
-                {
-                    DeleteMenu();
+                    await ReadMenu();
                 }
                 else if (selectedIndex == 2)
                 {
-                    UpdateMenu();
+                    await UpdateMenu();
+                }
+                else if (selectedIndex == 3)
+                {
+                    await DeleteMenu();
                 }
                 else if (selectedIndex == crudMainMenu.Length - 1)
                 {
@@ -197,20 +198,24 @@ namespace HYPJCW_HSZFT.Client
 
         public static async Task CreateMenu()
         {
-            bool queryExit = false;
-            Console.WriteLine("Please select an entity to create:");
-            Console.WriteLine("E - Employee");
-            Console.WriteLine("M - Manager");
-            Console.WriteLine("D - Department");
-            Console.WriteLine("ESC - Leave the menu");
-            Console.WriteLine("Press the corresponding key to select.");
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            if (!queryExit)
+            bool exitMenu = false;
+            while (!exitMenu)
             {
+                Console.Clear(); // Clear the console at the beginning of each loop
+                Console.WriteLine("Please select an entity to create:");
+                Console.WriteLine("E - Employee");
+                Console.WriteLine("M - Manager");
+                Console.WriteLine("D - Department");
+                Console.WriteLine("ESC - Leave the menu");
+                Console.WriteLine("Press the corresponding key to select.");
+                ClearInputBuffer();
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.E:
-                        CreateEmployee();
+                        await CreateEmployee();
                         break;
                     case ConsoleKey.M:
                         await CreateManager();
@@ -219,86 +224,116 @@ namespace HYPJCW_HSZFT.Client
                         await CreateDepartment();
                         break;
                     case ConsoleKey.Escape:
-                        queryExit = true;
+                        exitMenu = true;
                         break;
                     default:
+                        Console.WriteLine("Invalid selection. Please try again.");
                         break;
                 }
+
+                if (!exitMenu)
+                {
+                    Console.WriteLine("\nPress any key to continue...");
+                    Console.ReadKey(true);
+                }
             }
-            
         }
 
         static async Task ReadMenu()
         {
-            Console.WriteLine("Please select an entity to read:");
-            Console.WriteLine("E - Employee");
-            Console.WriteLine("M - Manager");
-            Console.WriteLine("D - Department");
-            Console.WriteLine("Press the corresponding key to select.");
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            switch (keyInfo.Key)
+            bool exitMenu = false;
+            while (!exitMenu)
             {
-                case ConsoleKey.E:
-                    await ReadEmployee();
-                    break;
-                case ConsoleKey.M:
-                    await ReadManager();
-                    break;
-                case ConsoleKey.D:
-                    await ReadDepartment();
-                    break;
-                default:
-                    Console.WriteLine("Invalid selection. Please try again.");
-                    break;
+                Console.WriteLine("Please select an entity to read:");
+                Console.WriteLine("E - Employee");
+                Console.WriteLine("M - Manager");
+                Console.WriteLine("D - Department");
+                Console.WriteLine("Press the corresponding key to select.");
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.E:
+                        await ReadEmployee();
+                        break;
+                    case ConsoleKey.M:
+                        await ReadManager();
+                        break;
+                    case ConsoleKey.D:
+                        await ReadDepartment();
+                        break;
+                    case ConsoleKey.Escape:
+                        exitMenu = true;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid selection. Please try again.");
+                        break;
+                }
             }
         }
         static async Task UpdateMenu()
         {
-            Console.WriteLine("Please select an entity to update:");
-            Console.WriteLine("E - Employee");
-            Console.WriteLine("M - Manager");
-            Console.WriteLine("D - Department");
-            Console.WriteLine("Press the corresponding key to select.");
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            switch (keyInfo.Key)
+            bool exitMenu = false;
+            while (!exitMenu)
             {
-                case ConsoleKey.E:
-                    await UpdateEmployee();
-                    break;
-                case ConsoleKey.M:
-                    await UpdateManager();
-                    break;
-                case ConsoleKey.D:
-                    await UpdateDepartment();
-                    break;
-                default:
-                    Console.WriteLine("Invalid selection. Please try again.");
-                    break;
+
+                Console.WriteLine("Please select an entity to update:");
+                Console.WriteLine("E - Employee");
+                Console.WriteLine("M - Manager");
+                Console.WriteLine("D - Department");
+                Console.WriteLine("Press the corresponding key to select.");
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.E:
+                        await UpdateEmployee();
+                        break;
+                    case ConsoleKey.M:
+                        await UpdateManager();
+                        break;
+                    case ConsoleKey.D:
+                        await UpdateDepartment();
+                        break;
+                    case ConsoleKey.Escape:
+                        exitMenu = true;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid selection. Please try again.");
+                        break;
+                }
             }
+
         }
         static async Task DeleteMenu()
         {
-            Console.WriteLine("Please select an entity to delete:");
-            Console.WriteLine("E - Employee");
-            Console.WriteLine("M - Manager");
-            Console.WriteLine("D - Department");
-            Console.WriteLine("Press the corresponding key to select.");
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            switch (keyInfo.Key)
+            bool exitMenu = false;
+            while (!exitMenu)
             {
-                case ConsoleKey.E:
-                    await DeleteEmployee();
-                    break;
-                case ConsoleKey.M:
-                    await DeleteManager();
-                    break;
-                case ConsoleKey.D:
-                    await DeleteDepartment();
-                    break;
-                default:
-                    Console.WriteLine("Invalid selection. Please try again.");
-                    break;
+                Console.WriteLine("Please select an entity to delete:");
+                Console.WriteLine("E - Employee");
+                Console.WriteLine("M - Manager");
+                Console.WriteLine("D - Department");
+                Console.WriteLine("Press the corresponding key to select.");
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.E:
+                        await DeleteEmployee();
+                        break;
+                    case ConsoleKey.M:
+                        await DeleteManager();
+                        break;
+                    case ConsoleKey.D:
+                        await DeleteDepartment();
+                        break;
+                    case ConsoleKey.Escape:
+                        exitMenu = true;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid selection. Please try again.");
+                        break;
+                }
             }
+
         }
         //Create
         static async Task CreateEmployee()
@@ -322,10 +357,10 @@ namespace HYPJCW_HSZFT.Client
             int completedProjects = int.Parse(Console.ReadLine() ?? "0");
 
             Console.WriteLine("Is Active? (true/false):");
-            bool active = bool.Parse(Console.ReadLine() ?? "false");
+            bool active = bool.Parse(Console.ReadLine().ToLower() ?? "false");
 
             Console.WriteLine("Is Retired? (true/false):");
-            bool retired = bool.Parse(Console.ReadLine() ?? "false");
+            bool retired = bool.Parse(Console.ReadLine().ToLower() ?? "false");
 
             Console.WriteLine("Enter Email:");
             string email = Console.ReadLine() ?? "";
@@ -345,8 +380,46 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine("Enter Commission:");
             string commission = Console.ReadLine() ?? "";
 
-            var departments = "";
+            var departments = await GetAllDepartments();
+            List<DepartmentDto> chosenDepartments = new List<DepartmentDto>();
 
+            // Increase the array size by 1 to include the "Exit" option
+            string[] departmentNames = new string[departments.Count + 1];
+            for (int i = 0; i < departments.Count; i++)
+            {
+                departmentNames[i] = departments[i].Name;
+            }
+            departmentNames[departments.Count] = "Exit"; // Add "Exit" as the last option
+            ClearInputBuffer();
+
+            bool exit = false;
+            while (!exit)
+            {
+                int selectedIndex2 = DisplayMenu(departmentNames);
+
+                if (selectedIndex2 != departmentNames.Length - 1)
+                {
+                    var selectedDepartment = departments[selectedIndex2];
+                    chosenDepartments.Add(new DepartmentDto
+                    {
+                        Name = departments[selectedIndex2].Name,
+                        DepartmentCode = departments[selectedIndex2].DepartmentCode,
+                        HeadOfDepartment = departments[selectedIndex2].HeadOfDepartment
+                    });
+                    Console.WriteLine($"Added {selectedDepartment.Name} to chosen departments.");
+                }
+                else
+                {
+                    exit = true; // Set exit to true to break the loop
+                    Console.WriteLine("Exiting department selection.");
+                }
+
+                if (!exit)
+                {
+                    Console.WriteLine("\nPress any key to continue...");
+                    Console.ReadKey(true);
+                }
+            }
             // Create a new EmployeeDto object
             var newEmployee = new EmployeeDto
             {
@@ -363,11 +436,11 @@ namespace HYPJCW_HSZFT.Client
                 Level = level,
                 Salary = salary,
                 Commission = commission,
-                Departments = new List<DepartmentDto>() 
+                Departments = chosenDepartments
             };
 
             // Call CreateEntity method
-            bool success = await CreateEntity(newEmployee, "/Employees");
+            bool success = await CreateEntity(newEmployee, "Employee");
 
             if (success)
             {
@@ -376,6 +449,15 @@ namespace HYPJCW_HSZFT.Client
             else
             {
                 Console.WriteLine("Failed to create employee.");
+            }
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
+        }
+        public static void ClearInputBuffer()
+        {
+            while (Console.KeyAvailable)
+            {
+                Console.ReadKey(true);
             }
         }
         static async Task CreateManager()
@@ -445,7 +527,7 @@ namespace HYPJCW_HSZFT.Client
             };
 
             // Call CreateEntity method
-            bool success = await CreateEntity(newDepartment, "/Departments");
+            bool success = await CreateEntity(newDepartment, "/Department");
 
             if (success)
             {
@@ -465,11 +547,10 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine("Enter Employee ID:");
             string employeeId = Console.ReadLine() ?? "";
 
-            var employees = await ReadEntity<EmployeeDto>(employeeId, "Employees");
-
-            if (employees.Any())
+            var employee = await ReadEntity<EmployeeDto>(employeeId, "Employee");
+            if (employee != null)
             {
-                StringFromList(employees);
+                PrintProperties(employee);
             }
             else
             {
@@ -486,9 +567,9 @@ namespace HYPJCW_HSZFT.Client
 
             var managers = await ReadEntity<Managers>(managerId, "Managers");
 
-            if (managers.Any())
+            if (managers != null)
             {
-                StringFromList(managers);
+                managers.ToString();
             }
             else
             {
@@ -503,11 +584,11 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine("Enter Department Code:");
             string departmentCode = Console.ReadLine() ?? "";
 
-            var departments = await ReadEntity<Departments>(departmentCode, "Departments");
+            var department = await ReadEntity<Departments>(departmentCode, "Departments");
 
-            if (departments.Any())
+            if (department != null)
             {
-                StringFromList(departments);
+                department.ToString();
             }
             else
             {
@@ -524,14 +605,13 @@ namespace HYPJCW_HSZFT.Client
             string employeeId = Console.ReadLine() ?? "";
 
             // Fetch the existing employee data
-            var employees = await ReadEntity<EmployeeDto>(employeeId, "Employees");
-            if (!employees.Any())
+            var employee = await ReadEntity<EmployeeDto>(employeeId, "Employees");
+            if (employee is null)
             {
                 Console.WriteLine("No employee found with the given ID.");
                 return;
             }
 
-            var employee = employees.First();
 
             // Update the employee data
             Console.WriteLine("Enter Name (leave blank to keep current value):");
@@ -605,14 +685,13 @@ namespace HYPJCW_HSZFT.Client
             string managerId = Console.ReadLine() ?? "";
 
             // Fetch the existing manager data
-            var managers = await ReadEntity<Managers>(managerId, "Managers");
-            if (!managers.Any())
+            var manager = await ReadEntity<Managers>(managerId, "Managers");
+            if (manager is null)
             {
                 Console.WriteLine("No manager found with the given ID.");
                 return;
             }
 
-            var manager = managers.First();
 
             // Update the manager data
             Console.WriteLine("Enter Name (leave blank to keep current value):");
@@ -652,14 +731,12 @@ namespace HYPJCW_HSZFT.Client
             string departmentCode = Console.ReadLine() ?? "";
 
             // Fetch the existing department data
-            var departments = await ReadEntity<Departments>(departmentCode, "Departments");
-            if (!departments.Any())
+            var department = await ReadEntity<Departments>(departmentCode, "Departments");
+            if (department is null)
             {
                 Console.WriteLine("No department found with the given code.");
                 return;
             }
-
-            var department = departments.First();
 
             // Update the department data
             Console.WriteLine("Enter Name (leave blank to keep current value):");
@@ -691,9 +768,9 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine("Deleting an Employee.");
 
             Console.WriteLine("Enter Employee ID:");
-            string employeeId = Console.ReadLine() ?? "";
+            string employeeId = Console.ReadLine();
 
-            bool success = await DeleteEntity<EmployeeDto>(employeeId, "Employees");
+            bool success = await DeleteEntity<Employees>(employeeId, "Employee");
 
             if (success)
             {
@@ -820,8 +897,10 @@ namespace HYPJCW_HSZFT.Client
             var url = $"{baseUrl}/{endpoint}";
             using var client = new HttpClient();
 
+            
+
             var jsonString = JsonConvert.SerializeObject(item);
-            var content = new StringContent(jsonString);
+            var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
             try
             {
@@ -836,28 +915,24 @@ namespace HYPJCW_HSZFT.Client
             }
         }
         //Read Method
-        public static async Task<List<T>> ReadEntity<T>(string id, string endpoint) where T : class
+        static async Task<T> ReadEntity<T>(string id, string entityType)
         {
-            var url = baseUrl + $"/{endpoint}/{id}";
-            using var client = new HttpClient();
             try
             {
+                string url = $"{baseUrl}/{entityType}/{id}";
+
+                using var client = new HttpClient();
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
-                var responseBody = await response.Content.ReadAsStringAsync();
 
-                var entities = JsonConvert.DeserializeObject<List<T>>(responseBody);
-                return entities ?? new List<T>();
+                var content = await response.Content.ReadAsStringAsync();
+                T entity = JsonConvert.DeserializeObject<T>(content);
+                return entity;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine($"There was an error: {ex.Message}");
-                return new List<T>();
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
-                throw;
+                Console.WriteLine($"An error occurred while reading the {entityType}: {ex.Message}");
+                return default;
             }
         }
         public static async Task<bool> UpdateEntity<T>(string id, T item, string endpoint) where T : class
@@ -924,7 +999,7 @@ namespace HYPJCW_HSZFT.Client
                 throw;
             }
         }
-          //Managers
+        //Managers
         public static async Task<List<Managers>> GetAllManagers()
         {
             var url = baseUrl + "/Managers";
@@ -951,7 +1026,7 @@ namespace HYPJCW_HSZFT.Client
         }
         public static async Task<List<Departments>> GetAllDepartments()
         {
-            var url = baseUrl + "/Managers";
+            var url = baseUrl + "/Departments";
             using var client = new HttpClient();
             try
             {

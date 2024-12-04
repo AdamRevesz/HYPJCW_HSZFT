@@ -29,7 +29,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             }
         }
 
-        [HttpDelete("/Delete{id}")]
+        [HttpDelete("/Manager/{id}")]
         public IActionResult Delete(string id)
         {
             try
@@ -43,7 +43,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             }
         }
 
-        [HttpGet("/Read{id}")]
+        [HttpGet("/Manager/{id}")]
         public ActionResult<Managers> Read(string id)
         {
             try
@@ -64,7 +64,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             return Ok(managers);
         }
 
-        [HttpPut("/Update{id}")]
+        [HttpPut("/Manager/{id}")]
         public IActionResult Update(string id, [FromBody] Managers manager)
         {
             try

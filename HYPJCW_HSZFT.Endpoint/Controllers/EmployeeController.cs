@@ -1,7 +1,9 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
 using HYPJCW_HSZFT.Logic.Interfaces;
 using HYPJCW_HSZFT.Models.DTOs;
+using HYPJCW_HSZFT.Models.Entity_Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace HYPJCW_HSZFT.Endpoint.Controllers
@@ -17,9 +19,10 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             this.logic = logic;
         }
         [HttpPost("/Employee")]
-        public void Create([FromBody] Employees item)
+        public void CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
-            this.logic.Create(item);
+            var employee = new Employees(employeeDto);
+            this.logic.Create(employee);
         }
 
         [HttpDelete("/Employee/{employeeId}")]
@@ -28,10 +31,10 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             this.logic.Delete(employeeId);
         }
 
-        [HttpGet("/Employee{employeeId}")]
-        public EmployeesShortViewDto Read([FromRoute] string employeeId)
+        [HttpGet("/Employee/{employeeId}")]
+        public EmployeeDto Read([FromRoute] string employeeId)
         {
-            return this.logic.Read(employeeId);
+           return this.logic.Read(employeeId);
         }
 
         [HttpGet("/Employees")]
@@ -46,97 +49,97 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             this.logic.Update(item, employeeId);
         }
 
-        [HttpGet("/Employees/levelrates")]
+        [HttpGet("/Employees/level-rates")]
         public LevelDto RateOfLevels()
         {
             return this.logic.GetRatesOfEmployeeLevels();
         }
 
-        [HttpGet("/Employees/underoroveravrsalary")]
+        [HttpGet("/Employees/under-or-over-avr-salary")]
         public string EmployeesUnderOrOver()
         {
             return this.logic.GetNumberOfEmployeesUnderOrOverTheAverageSalary();
         }
 
-        [HttpGet("/Employees/borninthe80s")]
+        [HttpGet("/Employees/born-in-the-80s")]
         public List<EmployeesEvenShorterViewDto> EmployeesBornIn80()
         {
             return this.logic.GetEmployeesBornInThe80();
         }
 
-        [HttpGet("/Employees/employeesworkingatleast2departments")]
+        [HttpGet("/Employees/employees-working-atleast-2departments")]
         public List<EmployeesShortViewDto> EmployeesWorkingMultipleDepartments()
         {
             return this.logic.GetEmployeesAtleastWorkingInTwoDepartments();
         }
 
-        [HttpGet("/Employees/employeesworkingbutpension")]
+        [HttpGet("/Employees/employees-working-but-pension")]
         public List<Employees> EmployeesWorkingButPension()
         {
             return this.logic.GetEmployeesWorkingButPension();
         }
 
-        [HttpGet("/Employees/employeesonepension")]
+        [HttpGet("/Employees/employees-on-pension")]
         public List<Employees> EmployeesOnPension()
         {
             return this.logic.GetEmployeesOnPension();
         }
 
-        [HttpGet("/Employees/averageonpension")]
+        [HttpGet("/Employees/average-on-pension")]
         public double AverageOnpension()
         {
             return this.logic.GetAverageOfSalaryOfEmployeesOnPension();
         }
 
-        [HttpGet("/Employees/averagesalarywithcommission")]
+        [HttpGet("/Employees/average-salary-with-commission")]
         public IEnumerable<EmployeeDto> AverageSalaryWithCommission()
         {
             return this.logic.GetWorkersDescSalaryWithCommission();
         }
 
-        [HttpGet("/Employees/employeeswithdrmanagers")]
+        [HttpGet("/Employees/employees-with-drmanagers")]
         public List<Employees> EmployeesWithDoctorManager()
         {
             return this.logic.GetEmployeesOfDepartmentWithDoctorateManager();
         }
 
-        [HttpGet("/Employees/averageeachlevel")]
+        [HttpGet("/Employees/average-each-level")]
         public Dictionary<string, double> AvergaeEachLevel()
         {
             return this.logic.GetAverageOfSalaryEachLevel();
         }
 
-        [HttpGet("/Employees/whoearnsmore")]
+        [HttpGet("/Employees/who-earns-more")]
         public string WhoEarnsMore()
         {
             return this.logic.WhoEarnsMoreJuniorOrMedior();
         }
 
-        [HttpGet("/Employees/highestcommissionbylevel")]
+        [HttpGet("/Employees/highest-commission-by-level")]
         public (string Level, decimal HighestCommission) HighestCommissionByLevel()
         {
             return this.logic.GetHighestCommissionFromLevel();
         }
 
-        [HttpGet("/Employees/employeeleastprojects")]
+        [HttpGet("/Employees/employee-least-projects")]
         public EmployeesShortViewDto EmployeesLeastProjects()
         {
             return this.logic.GetEmployeeWithLeastProjectsBasedOnYearsWorked();
         }
 
-        [HttpGet("/Employees/salaryofemployeesbirthyear")]
+        [HttpGet("/Employees/salary-of-employees-birthyear")]
         public List<EmployeeDto> SalaryOfEmployeesBirthYear()
         {
             return this.logic.GetSalaryOfEmployeesBasedOnBirthYear();
         }
 
-        [HttpGet("/Employees/activeemployeeleastprojects")]
+        [HttpGet("/Employees/active-employee-leastprojects")]
         public EmployeeDto ActiveEmployeesLeastProjects()
         {
             return this.logic.GetActiveEmployeeLeastProjects();
         }
 
-        [HttpGet("/Employees/highercommissionthanmaxsalary")]
+        [HttpGet("/Employees/higher-commission-than-max-salary")]
         public (List<EmployeeDto>? EmployeesWithHigherCommission, List<EmployeeDto>? EmployeeWithLowerSalary) HigherCommissionThanMaxSalary()
         {
             return this.logic.GetEmployeeWithHigherCommissionThanOthersSalary();
