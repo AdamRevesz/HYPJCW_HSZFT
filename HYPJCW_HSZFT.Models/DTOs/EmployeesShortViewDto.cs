@@ -11,7 +11,7 @@ namespace HYPJCW_HSZFT.Models.DTOs
     {
         public string Name { get; set; }
         public int Salary { get; set; }
-        public string Commisison { get; set; }
+        public string Commission { get; set; }
         public int CompletedProjects { get; set; }
         public List<DepartmentDto> Departments { get; set; } = new List<DepartmentDto>();
 
@@ -25,7 +25,7 @@ namespace HYPJCW_HSZFT.Models.DTOs
             var departments = Departments != null ? string.Join(", ", Departments.Select(d => d.Name)) : "None";
             return $"Name: {Name}" +
                 $"\nSalary: {Salary}" +
-                $"\nCommission: {Commisison}" +
+                $"\nCommission: {Commission}" +
                 $"\nCompleted Projects: {CompletedProjects}" +
                 $"\nDepartments: {departments}";
         }

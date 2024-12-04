@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace HYPJCW_HSZFT.Models.DTOs
 {
-    public class EmployeesShorterViewDto
+    public class EmployeeSalaryDto
     {
-        public string EmployeeId { get; set; }
         public string Name { get; set; }
-        public int BirthYear { get; set; }
-        public int StartYear { get; set; }
+        public double Salary { get; set; }
+        public double Commission { get; set; }
+        public string Level { get; set; }
     }
 }

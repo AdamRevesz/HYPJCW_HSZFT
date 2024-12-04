@@ -22,7 +22,6 @@ namespace HYPJCW_HSZFT.Logic
         private readonly IRepository<Managers> _managerRepo;
         private readonly IRepository<Employees> _employeeRepo;
         private readonly IRepository<Departments> _departmentRepo;
-        private readonly IRepository<EmployeesOfDepartments> employeesOfDeptRepo;
 
         public ImportLogic(IRepository<Managers> repo1, IRepository<Employees> repo2, IRepository<Departments> repo3)
         {
@@ -162,17 +161,7 @@ namespace HYPJCW_HSZFT.Logic
                     };
 
                     _employeeRepo.Create(employee);
-
-                    foreach (var department in employee?.Departments)
-                    {
-                            employeesOfDeptRepo.Create(new EmployeesOfDepartments
-                            {
-                                EmployeesOfDepartmentsId = Guid.NewGuid().ToString(),
-                                EmployeeId = employee.EmployeeId,
-                                DepartmentId = department.DepartmentCode
-                            });
-                        
-                    }
+                    
                 }
             }
 

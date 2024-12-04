@@ -85,7 +85,7 @@ namespace HYPJCW_HSZFT.Logic
             return rate;
         }
 
-        public string GetNumberOfEmployeesUnderOrOverTheAverageSalary()
+        public AveragesalaryDto GetNumberOfEmployeesUnderOrOverTheAverageSalary()
         {
             var everEmployee = employeeRepo.ReadAll();
             var average = everEmployee.Average(x => x.Salary);
@@ -103,15 +103,14 @@ namespace HYPJCW_HSZFT.Logic
                 UnderAverage = result.Where(r => r.IsUnderAverage).Sum(r => r.Count),
                 OverAverage = result.Where(r => !r.IsUnderAverage).Sum(r => r.Count)
             };
-            return $"Under Average Employees: {rate.UnderAverage}" +
-                $"\nOver Average Employees {rate.OverAverage}";
+            return rate;
         }
 
-        public List<EmployeesEvenShorterViewDto> GetEmployeesBornInThe80()
+        public List<EmployeesShorterViewDto> GetEmployeesBornInThe80()
         {
             var everyEmployee = employeeRepo.ReadAll();
             var employees = everyEmployee.Where(p => p.BirthYear >= 1980 && p.BirthYear <= 1989).ToList()
-                .Select(e => new EmployeesEvenShorterViewDto
+                .Select(e => new EmployeesShorterViewDto
                 {
                     EmployeeId = e.EmployeeId,
                     Name = e.Name,
@@ -132,7 +131,7 @@ namespace HYPJCW_HSZFT.Logic
                 {
                     Name = e.Name,
                     Salary = e.Salary,
-                    Commisison = e.Commission,
+                    Commission = e.Commission,
                     Departments = e.Departments.Select(d => new DepartmentDto
                     {
                         Name = d.Name,
@@ -173,14 +172,14 @@ namespace HYPJCW_HSZFT.Logic
 
             if (!employee.Any())
             {
-                throw new NullReferenceException("There is no employee on penison");
+                return 0;
             }
             return employee
                 .Average(a => a.Salary);
 
         }
 
-        public IEnumerable<EmployeeDto> GetWorkersDescSalaryWithCommission()
+        public List<EmployeeSalaryDto> GetWorkersDescSalaryWithCommission()
         {
             var everyEmployee = employeeRepo.ReadAll()
                 .Where(e => !string.IsNullOrEmpty(e.Commission))
@@ -195,13 +194,15 @@ namespace HYPJCW_HSZFT.Logic
                 }
             }
             return everyEmployee
-                .Select(d => new EmployeeDto
+                .Select(d => new EmployeeSalaryDto
                 {
                     Name = d.Name,
                     Salary = d.Salary,
-                    Commission = d.Commission
+                    Commission = double.Parse(d.Commission),
+                    Level = d.Level
                 })
-                .OrderByDescending(e => e.Salary);
+                .OrderByDescending(e => e.Salary)
+                .ToList();
         }
 
 
@@ -221,19 +222,18 @@ namespace HYPJCW_HSZFT.Logic
 
 
 
-        public Dictionary<string, double> GetAverageOfSalaryEachLevel()
+        public List<AverageEachLevelDto> GetAverageOfSalaryEachLevel()
         {
             var everyEmployee = employeeRepo.ReadAll();
             var grouped = everyEmployee
-                .GroupBy(e => e.Level.ToLower() ?? "unkown")
-                .Select(g => new
+                .GroupBy(e => (e.Level ?? "unknown").ToLower())
+                .Select(g => new AverageEachLevelDto
                 {
                     Level = g.Key,
-                    AverageSalary = g.Average(e => e.Salary)
+                    Average = g.Average(e => e.Salary)
                 })
-                .ToDictionary(x => x.Level, x => Math.Round(x.AverageSalary));
+                .ToList();
             return grouped;
-
         }
 
         public string WhoEarnsMoreJuniorOrMedior()
@@ -252,14 +252,19 @@ namespace HYPJCW_HSZFT.Logic
             return $"Max Junior: {maxJuniorSalary}";
         }
 
-        public (string Level, decimal HighestCommission) GetHighestCommissionFromLevel()
+        public HighestCommissionDto GetHighestCommissionFromLevel()
         {
             var everyEmployee = GetWorkersDescSalaryWithCommission();
-            var highestCommssion = everyEmployee
-                .OrderByDescending(e => e.Commission)
-                .FirstOrDefault();
+            var highestCommission = everyEmployee
+            .OrderByDescending(e => Convert.ToInt32(e.Commission))
+            .FirstOrDefault();
 
-            return (highestCommssion.Level, Math.Round(decimal.Parse(highestCommssion.Commission)));
+            var result = new HighestCommissionDto
+            {
+                Level = highestCommission.Level,
+                Average = Convert.ToInt32(highestCommission.Commission)
+            };
+            return result;
         }
 
         public EmployeesShortViewDto GetEmployeeWithLeastProjectsBasedOnYearsWorked()
@@ -276,7 +281,15 @@ namespace HYPJCW_HSZFT.Logic
             return new EmployeesShortViewDto
             {
                 Name = employeLeast.Name,
-                CompletedProjects = employeLeast.CompletedProjects
+                CompletedProjects = employeLeast.CompletedProjects,
+                Salary = employeLeast.Salary,
+                Commission = employeLeast.Commission,
+                Departments = employeLeast.Departments.Select(d => new DepartmentDto
+                {
+                    Name = d.Name,
+                    DepartmentCode = d.DepartmentCode,
+                    HeadOfDepartment = d.HeadOfDepartment
+                }).ToList()
             };
 
 
@@ -318,7 +331,7 @@ namespace HYPJCW_HSZFT.Logic
             };
         }
 
-        public (List<EmployeeDto>? EmployeesWithHigherCommission, List<EmployeeDto>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary()
+        public (List<EmployeeSalaryDto>? EmployeesWithHigherCommission, List<EmployeeSalaryDto>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary()
         {
             var everyEmployee = GetWorkersDescSalaryWithCommission();
 
@@ -328,11 +341,11 @@ namespace HYPJCW_HSZFT.Logic
             }
 
             var maxSalary = everyEmployee.Max(e => e.Salary);
-            var maxCommisison = everyEmployee.Max(e => int.Parse(e.Commission));
+            var maxCommisison = everyEmployee.Max(e => Convert.ToInt32(e.Commission));
 
             // Find the employee with the higher commission
             var employeesWithHigherCommission = everyEmployee
-                .Where(e => int.Parse(e.Commission) > maxSalary)
+                .Where(e => Convert.ToInt32(e.Commission) > maxSalary)
                 .ToList();
 
             // Find the employees with lower salary
@@ -346,31 +359,10 @@ namespace HYPJCW_HSZFT.Logic
                 );
         }
 
-        public void Create(Employees item)
+        public async Task Create(EmployeeDto employeeDto)
         {
-            var everyEmployee = employeeRepo.ReadAll();
-            if (item is null)
-            {
-                throw new ArgumentException("Manager is null");
-            }
-
-            var lastId = everyEmployee
-                .OrderByDescending(m => m.EmployeeId)
-                .Select(m => m.EmployeeId)
-                .FirstOrDefault();
-
-            if (lastId != null && lastId.StartsWith("EMP"))
-            {
-                var numericPart = int.Parse(lastId.Substring(3));
-                var newId = $"EMP{numericPart + 1:D3}";
-                item.EmployeeId = newId;
-            }
-            else
-            {
-                item.EmployeeId = "EMP001";
-            }
-
-            employeeRepo.Create(item);
+            var employee = new Employees(employeeDto);
+            await employeeRepo.Create(employeeDto);
         }
 
         public EmployeeDto Read(string id)
@@ -403,7 +395,7 @@ namespace HYPJCW_HSZFT.Logic
                         HeadOfDepartment = d.HeadOfDepartment
                     }).ToList() ?? new List<DepartmentDto>()
                 };
-            
+
             return employeeDto;
         }
 

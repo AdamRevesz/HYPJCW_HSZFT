@@ -19,10 +19,10 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             this.logic = logic;
         }
         [HttpPost("/Employee")]
-        public void CreateEmployee([FromBody] EmployeeDto employeeDto)
+        public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
-            var employee = new Employees(employeeDto);
-            this.logic.Create(employee);
+            await this.logic.Create(employeeDto);
+            return Ok();
         }
 
         [HttpDelete("/Employee/{employeeId}")]
@@ -56,13 +56,13 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/under-or-over-avr-salary")]
-        public string EmployeesUnderOrOver()
+        public AveragesalaryDto EmployeesUnderOrOver()
         {
             return this.logic.GetNumberOfEmployeesUnderOrOverTheAverageSalary();
         }
 
         [HttpGet("/Employees/born-in-the-80s")]
-        public List<EmployeesEvenShorterViewDto> EmployeesBornIn80()
+        public List<EmployeesShorterViewDto> EmployeesBornIn80()
         {
             return this.logic.GetEmployeesBornInThe80();
         }
@@ -92,7 +92,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/average-salary-with-commission")]
-        public IEnumerable<EmployeeDto> AverageSalaryWithCommission()
+        public IEnumerable<EmployeeSalaryDto> AverageSalaryWithCommission()
         {
             return this.logic.GetWorkersDescSalaryWithCommission();
         }
@@ -104,19 +104,20 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/average-each-level")]
-        public Dictionary<string, double> AvergaeEachLevel()
+        public List<AverageEachLevelDto> AverageEachLevel()
         {
             return this.logic.GetAverageOfSalaryEachLevel();
         }
 
         [HttpGet("/Employees/who-earns-more")]
-        public string WhoEarnsMore()
+        public IActionResult WhoEarnsMore()
         {
-            return this.logic.WhoEarnsMoreJuniorOrMedior();
+            var result = this.logic.WhoEarnsMoreJuniorOrMedior();
+            return Ok(result);
         }
 
         [HttpGet("/Employees/highest-commission-by-level")]
-        public (string Level, decimal HighestCommission) HighestCommissionByLevel()
+        public HighestCommissionDto HighestCommissionByLevel()
         {
             return this.logic.GetHighestCommissionFromLevel();
         }
@@ -140,7 +141,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
         }
 
         [HttpGet("/Employees/higher-commission-than-max-salary")]
-        public (List<EmployeeDto>? EmployeesWithHigherCommission, List<EmployeeDto>? EmployeeWithLowerSalary) HigherCommissionThanMaxSalary()
+        public (List<EmployeeSalaryDto>? EmployeesWithHigherCommission, List<EmployeeSalaryDto>? EmployeeWithLowerSalary) HigherCommissionThanMaxSalary()
         {
             return this.logic.GetEmployeeWithHigherCommissionThanOthersSalary();
         }

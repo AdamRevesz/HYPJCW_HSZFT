@@ -10,28 +10,28 @@ namespace HYPJCW_HSZFT.Logic.Interfaces
 {
     public interface IEmployeesLogic
     {
-        void Create(Employees item);
+        Task Create(EmployeeDto employeeDto);
         EmployeeDto Read(string id);
         void Update(Employees item, string id);
         List<EmployeeDto> ReadAll();
         void Delete(string id);
 
-        List<EmployeesEvenShorterViewDto> GetEmployeesBornInThe80();
+        List<EmployeesShorterViewDto> GetEmployeesBornInThe80();
         List<EmployeesShortViewDto> GetEmployeesAtleastWorkingInTwoDepartments();
         List<Employees> GetEmployeesWorkingButPension();
         List<Employees> GetEmployeesOnPension();
         double GetAverageOfSalaryOfEmployeesOnPension();
-        IEnumerable<EmployeeDto> GetWorkersDescSalaryWithCommission();
+        List<EmployeeSalaryDto> GetWorkersDescSalaryWithCommission();
         LevelDto GetRatesOfEmployeeLevels();
         List<Employees> GetEmployeesOfDepartmentWithDoctorateManager();
-        string GetNumberOfEmployeesUnderOrOverTheAverageSalary();
-        Dictionary<string, double> GetAverageOfSalaryEachLevel();
+        AveragesalaryDto GetNumberOfEmployeesUnderOrOverTheAverageSalary();
+        List<AverageEachLevelDto> GetAverageOfSalaryEachLevel();
         string WhoEarnsMoreJuniorOrMedior();
-        (string Level, decimal HighestCommission) GetHighestCommissionFromLevel(); //decimal for more precision
+        HighestCommissionDto GetHighestCommissionFromLevel(); //decimal for more precision
         EmployeesShortViewDto GetEmployeeWithLeastProjectsBasedOnYearsWorked();
         List<EmployeeDto> GetSalaryOfEmployeesBasedOnBirthYear();
         EmployeeDto GetActiveEmployeeLeastProjects();
-        (List<EmployeeDto>? EmployeesWithHigherCommission, List<EmployeeDto>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary();
+        (List<EmployeeSalaryDto>? EmployeesWithHigherCommission, List<EmployeeSalaryDto>? EmployeeWithLowerSalary) GetEmployeeWithHigherCommissionThanOthersSalary();
 
     }
 }

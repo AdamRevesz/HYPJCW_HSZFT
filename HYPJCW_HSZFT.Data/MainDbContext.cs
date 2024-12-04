@@ -25,25 +25,23 @@ namespace HYPJCW_HSZFT.Data
             {
                 entity.HasKey(e => e.EmployeeId);
             });
-            mod.Entity<Employees>(entity =>
-            {
-                entity.HasMany(e => e.Departments)
-                      .WithMany(d => d.Employees)
-                      .UsingEntity<Dictionary<string, object>>(
-                          "EmployeeDepartment",
-                          j => j.HasOne<Departments>().WithMany().HasForeignKey("DepartmentCode"),
-                          j => j.HasOne<Employees>().WithMany().HasForeignKey("EmployeeId"));
-            });
+            mod.Entity<Employees>()
+                .HasMany(e => e.Departments)
+                .WithMany(d => d.Employees);
 
             mod.Entity<Departments>(entity =>
             {
                 entity.HasKey(x => x.DepartmentCode);
             });
 
-            mod.Entity<Managers>(entity =>
-            {
-                entity.HasKey(x => x.ManagerId);
-            });
+            mod.Entity<Employees>()
+    .HasMany(e => e.Departments)
+    .WithMany(d => d.Employees)
+    .UsingEntity<Dictionary<string, object>>(
+        "EmployeeDepartment",
+        l => l.HasOne<Departments>().WithMany().HasForeignKey("DepartmentCode").HasPrincipalKey(d => d.DepartmentCode),
+        r => r.HasOne<Employees>().WithMany().HasForeignKey("EmployeeId").HasPrincipalKey(e => e.EmployeeId),
+        j => j.HasKey("EmployeeId", "DepartmentCode"));
             base.OnModelCreating(mod);
         }
     }

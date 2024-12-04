@@ -6,22 +6,42 @@ using System.Text;
 using System.Threading.Tasks;
 using HYPJCW_HSZFT.Data;
 using HYPJCW_HSZFT.Entities.Entity_Models;
+using HYPJCW_HSZFT.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace HYPJCW_HSZFT.Repository
 {
-    public class EmployeeRepository : Repository<Employees> ,IRepository<Employees>
+
+
+    public class EmployeeRepository : Repository<Employees>, IRepository<Employees>
     {
         public EmployeeRepository(MainDbContext ctx) : base(ctx)
         {
         }
 
-        public override Employees Read(string id)
+        public async Task Create(EmployeeDto employeeDto)
         {
-            return ctx.Employees.FirstOrDefault(x => x.EmployeeId == id);
+            var employee = new Employees(employeeDto);
+
+            var departmentCodes = employeeDto.Departments.Select(d => d.DepartmentCode).ToList();
+
+            var existingDepartments = ctx.Departments
+                .Where(d => departmentCodes.Contains(d.DepartmentCode))
+                .ToList();
+
+            employee.Departments = existingDepartments;
+
+            ctx.Employees.Add(employee);
+
+            await ctx.SaveChangesAsync();
         }
 
-        public List<Employees> ReadAll()
+        public override Employees Read(string id)
+        {
+            return ctx.Employees.FirstOrDefault(x => x.EmployeeId == id) ?? throw new InvalidOperationException("Employee not found");
+        }
+
+        public new List<Employees> ReadAll()
         {
             return ctx.Employees.Include(e => e.Departments.OrderBy(d => d.Name)).ToList();
         }
@@ -37,12 +57,11 @@ namespace HYPJCW_HSZFT.Repository
                 }
                 catch (Exception)
                 {
-
                 }
-
             }
             ctx.SaveChanges();
         }
-
     }
 }
+
+

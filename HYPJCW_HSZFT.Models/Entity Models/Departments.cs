@@ -22,10 +22,9 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public string HeadOfDepartment { get; set; }
         //[JsonIgnore]
         //[NotMapped]
-        public virtual ICollection<Employees> Employees{ get; set; }
+        public virtual List<Employees> Employees { get; set; } = new List<Employees>();
         //[JsonIgnore]
         //[NotMapped]
-        public virtual ICollection<EmployeesOfDepartments> EmployeesOfDepartments { get; set; }
 
 
         public Departments(string name, string departmentCode,string headOfDepartment )
@@ -33,7 +32,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             Name = name;
             DepartmentCode = departmentCode;
             HeadOfDepartment = headOfDepartment;
-            this.Employees = new HashSet<Employees>();
+            this.Employees = new List<Employees>();
         }
 
         public Departments() { }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HYPJCW_HSZFT.Models.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,6 @@ namespace HYPJCW_HSZFT.Repository
             void Create(T item);
             void Update(T item);
             void Delete(string id);
-        }
+        Task Create(EmployeeDto employeeDto);
+    }
 }

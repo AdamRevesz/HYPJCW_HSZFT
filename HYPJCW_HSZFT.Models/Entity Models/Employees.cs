@@ -36,10 +36,9 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
         public string Commission { get; set; } = "";
         //[JsonIgnore]
         //[NotMapped]
-        public virtual ICollection<Departments> Departments { get; set; }
+        public virtual List<Departments> Departments { get; set; } = new List<Departments>();
         //[JsonIgnore]
         //[NotMapped]
-        public virtual ICollection<EmployeesOfDepartments> EmployeesOfDepartments { get; set; }
 
         public Employees(
             string employeeId, string name, int birthYear, int startYear,
@@ -59,7 +58,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             Level = level;
             Salary = salary;
             Commission = commission;
-            this.Departments = new HashSet<Departments>(); // Initialize with empty list if null
+            this.Departments = new List<Departments>(); // Initialize with empty list if null
         }
         public Employees() { }
 
@@ -78,12 +77,7 @@ namespace HYPJCW_HSZFT.Entities.Entity_Models
             Level = employeeDto.Level ?? string.Empty;
             Salary = employeeDto.Salary ?? default;
             Commission = employeeDto.Commission ?? string.Empty;
-            Departments = employeeDto.Departments?.Select(d => new Departments
-            {
-                Name = d.Name,
-                DepartmentCode = d.DepartmentCode,
-                HeadOfDepartment = d.HeadOfDepartment
-            }).ToList() ?? new List<Departments>();
+            Departments = new List<Departments>();
         }
     }
 }

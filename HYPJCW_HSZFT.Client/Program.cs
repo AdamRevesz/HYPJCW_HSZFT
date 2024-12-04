@@ -1,7 +1,9 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
+using HYPJCW_HSZFT.Logic.Interfaces;
 using HYPJCW_HSZFT.Models.DTOs;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Text;
 using System.Text.Json;
 
@@ -26,7 +28,7 @@ namespace HYPJCW_HSZFT.Client
                 "List eployees on pension, but still working",
                 "List employees on pension",
                 "Show the average salary of employees on pension",
-                "List employees descending based on salary with pension",
+                "List employees descending based on salary with commission",
                 "List employees that have a doctor head of department",
                 "List average of salary each level",
                 "Who earns more an average salary junior or a max salary medior?",
@@ -41,6 +43,7 @@ namespace HYPJCW_HSZFT.Client
             {
                 "Create",
                 "Read",
+                "Read All",
                 "Update",
                 "Delete",
                 "Exit"
@@ -66,7 +69,7 @@ namespace HYPJCW_HSZFT.Client
                         await ExportClasses();
                         break;
                     case 3:
-                       await HandleMainCrud(crudMainMenu);
+                        await HandleMainCrud(crudMainMenu);
                         break;
                     case 4:
                         GraphOfSalaries(await GetAllEmployeesList());
@@ -138,9 +141,94 @@ namespace HYPJCW_HSZFT.Client
                     Console.ReadLine();
                     Console.Clear();
                 }
-                else if (selectedIndex2 == 1)
+                if (selectedIndex2 == 1)
                 {
                     await ShowRatesOfEmployees();
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 2)
+                {
+                    await OverOrUnderAverageSalary();
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 3)
+                {
+                    StringFromList<EmployeesShorterViewDto>(await GetAllEmployeesBorn80List());
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 4)
+                {
+                    StringFromList<EmployeesShortViewDto>(await GetAllEmployeesWorkingIn2Departments());
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 5)
+                {
+                    StringFromList<EmployeesShortViewDto>(await GetAllEmployeesWorkingOnPension());
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 6)
+                {
+                    StringFromList<EmployeesShortViewDto>(await GetAllEmployeesOnPension());
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 7)
+                {
+                    double output = await AverageOnPension();
+                    Console.WriteLine($"The average is {output}");
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 8)
+                {
+                    StringFromList<EmployeeSalaryDto>(await AverageSalaryWithCommission());
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 9)
+                {
+                    StringFromList<EmployeesShortViewDto>(await GetAllEmployeesWithDoctorManager());
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 10)
+                {
+                    StringFromList<AverageEachLevelDto>(await AverageEachLevel());
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 11)
+                {
+                    await WhoEarnsMore();
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 12)
+                {
+                    PrintProperties(await HighestCommission());
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                if (selectedIndex2 == 13)
+                {
+                    PrintProperties(await EmployeeWithLeastProject());
                     Console.WriteLine("Press any key to continue");
                     Console.ReadLine();
                     Console.Clear();
@@ -176,9 +264,13 @@ namespace HYPJCW_HSZFT.Client
                 }
                 else if (selectedIndex == 2)
                 {
-                    await UpdateMenu();
+                    await ReadAllMenu();
                 }
                 else if (selectedIndex == 3)
+                {
+                    await UpdateMenu();
+                }
+                else if (selectedIndex == 4)
                 {
                     await DeleteMenu();
                 }
@@ -206,7 +298,7 @@ namespace HYPJCW_HSZFT.Client
                 Console.WriteLine("E - Employee");
                 Console.WriteLine("M - Manager");
                 Console.WriteLine("D - Department");
-                Console.WriteLine("ESC - Leave the menu");
+                Console.WriteLine("ESC - Leave menu");
                 Console.WriteLine("Press the corresponding key to select.");
                 ClearInputBuffer();
 
@@ -248,6 +340,7 @@ namespace HYPJCW_HSZFT.Client
                 Console.WriteLine("E - Employee");
                 Console.WriteLine("M - Manager");
                 Console.WriteLine("D - Department");
+                Console.WriteLine("ESC - Leave menu");
                 Console.WriteLine("Press the corresponding key to select.");
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 switch (keyInfo.Key)
@@ -270,6 +363,38 @@ namespace HYPJCW_HSZFT.Client
                 }
             }
         }
+        static async Task ReadAllMenu()
+        {
+            bool exitMenu = false;
+            while (!exitMenu)
+            {
+                Console.WriteLine("Please select an entity to read all:");
+                Console.WriteLine("E - Employees");
+                Console.WriteLine("M - Managers");
+                Console.WriteLine("D - Departments");
+                Console.WriteLine("ESC - Leave menu");
+                Console.WriteLine("Press the corresponding key to select.");
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.E:
+                         StringFromList<EmployeeDto>(await GetAllEmployeesList());
+                        break;
+                    case ConsoleKey.M:
+                        StringFromList<Managers>(await GetAllManagers());
+                        break;
+                    case ConsoleKey.D:
+                        StringFromList<DepartmentDto>(await GetAllDepartments());
+                        break;
+                    case ConsoleKey.Escape:
+                        exitMenu = true;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid selection. Please try again.");
+                        break;
+                }
+            }
+        }
         static async Task UpdateMenu()
         {
             bool exitMenu = false;
@@ -280,6 +405,7 @@ namespace HYPJCW_HSZFT.Client
                 Console.WriteLine("E - Employee");
                 Console.WriteLine("M - Manager");
                 Console.WriteLine("D - Department");
+                Console.WriteLine("ESC - Leave menu");
                 Console.WriteLine("Press the corresponding key to select.");
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 switch (keyInfo.Key)
@@ -312,6 +438,7 @@ namespace HYPJCW_HSZFT.Client
                 Console.WriteLine("E - Employee");
                 Console.WriteLine("M - Manager");
                 Console.WriteLine("D - Department");
+                Console.WriteLine("ESC - Leave Menu");
                 Console.WriteLine("Press the corresponding key to select.");
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 switch (keyInfo.Key)
@@ -491,7 +618,7 @@ namespace HYPJCW_HSZFT.Client
             };
 
             // Call CreateEntity method
-            bool success = await CreateEntity(newManager, "/Managers");
+            bool success = await CreateEntity(newManager, "Managers");
 
             if (success)
             {
@@ -527,7 +654,7 @@ namespace HYPJCW_HSZFT.Client
             };
 
             // Call CreateEntity method
-            bool success = await CreateEntity(newDepartment, "/Department");
+            bool success = await CreateEntity(newDepartment, "Department");
 
             if (success)
             {
@@ -550,7 +677,7 @@ namespace HYPJCW_HSZFT.Client
             var employee = await ReadEntity<EmployeeDto>(employeeId, "Employee");
             if (employee != null)
             {
-                PrintProperties(employee);
+                PrintProperties(employee, new HashSet<object>());
             }
             else
             {
@@ -565,11 +692,11 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine("Enter Manager ID:");
             string managerId = Console.ReadLine() ?? "";
 
-            var managers = await ReadEntity<Managers>(managerId, "Managers");
+            var managers = await ReadEntity<Managers>(managerId, "Manager");
 
             if (managers != null)
             {
-                managers.ToString();
+                PrintProperties(managers, new HashSet<object>());
             }
             else
             {
@@ -584,11 +711,11 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine("Enter Department Code:");
             string departmentCode = Console.ReadLine() ?? "";
 
-            var department = await ReadEntity<Departments>(departmentCode, "Departments");
+            var department = await ReadEntity<Departments>(departmentCode, "Department");
 
             if (department != null)
             {
-                department.ToString();
+                PrintProperties(department, new HashSet<object>());
             }
             else
             {
@@ -605,13 +732,12 @@ namespace HYPJCW_HSZFT.Client
             string employeeId = Console.ReadLine() ?? "";
 
             // Fetch the existing employee data
-            var employee = await ReadEntity<EmployeeDto>(employeeId, "Employees");
+            var employee = await ReadEntity<EmployeeDto>(employeeId, "Employee");
             if (employee is null)
             {
                 Console.WriteLine("No employee found with the given ID.");
                 return;
             }
-
 
             // Update the employee data
             Console.WriteLine("Enter Name (leave blank to keep current value):");
@@ -662,10 +788,51 @@ namespace HYPJCW_HSZFT.Client
             string commission = Console.ReadLine();
             if (!string.IsNullOrEmpty(commission)) employee.Commission = commission;
 
-            // Optionally, you can add code to update Departments
+            var departments = await GetAllDepartments();
+            List<DepartmentDto> chosenDepartments = new List<DepartmentDto>();
+
+            // Increase the array size by 1 to include the "Exit" option
+            string[] departmentNames = new string[departments.Count + 1];
+            for (int i = 0; i < departments.Count; i++)
+            {
+                departmentNames[i] = departments[i].Name;
+            }
+            departmentNames[departments.Count] = "Exit"; // Add "Exit" as the last option
+            ClearInputBuffer();
+
+            bool exit = false;
+            while (!exit)
+            {
+                int selectedIndex2 = DisplayMenu(departmentNames);
+
+                if (selectedIndex2 != departmentNames.Length - 1)
+                {
+                    var selectedDepartment = departments[selectedIndex2];
+                    chosenDepartments.Add(new DepartmentDto
+                    {
+                        Name = departments[selectedIndex2].Name,
+                        DepartmentCode = departments[selectedIndex2].DepartmentCode,
+                        HeadOfDepartment = departments[selectedIndex2].HeadOfDepartment
+                    });
+                    Console.WriteLine($"Added {selectedDepartment.Name} to chosen departments.");
+                }
+                else
+                {
+                    exit = true; // Set exit to true to break the loop
+                    Console.WriteLine("Exiting department selection.");
+                }
+
+                if (!exit)
+                {
+                    Console.WriteLine("\nPress any key to continue...");
+                    Console.ReadKey(true);
+                }
+            }
+
+            employee.Departments = chosenDepartments;
 
             // Call UpdateEntity method
-            bool success = await UpdateEntity(employeeId, employee, "Employees");
+            bool success = await UpdateEntity(employeeId, employee, "Employee");
 
             if (success)
             {
@@ -676,6 +843,7 @@ namespace HYPJCW_HSZFT.Client
                 Console.WriteLine("Failed to update employee.");
             }
         }
+
         static async Task UpdateManager()
         {
             Console.Clear();
@@ -685,7 +853,7 @@ namespace HYPJCW_HSZFT.Client
             string managerId = Console.ReadLine() ?? "";
 
             // Fetch the existing manager data
-            var manager = await ReadEntity<Managers>(managerId, "Managers");
+            var manager = await ReadEntity<Managers>(managerId, "Manager");
             if (manager is null)
             {
                 Console.WriteLine("No manager found with the given ID.");
@@ -711,7 +879,7 @@ namespace HYPJCW_HSZFT.Client
             if (bool.TryParse(hasMbaInput, out bool hasMba)) manager.HasMba = hasMba;
 
             // Call UpdateEntity method
-            bool success = await UpdateEntity(managerId, manager, "Managers");
+            bool success = await UpdateEntity(managerId, manager, "Manager");
 
             if (success)
             {
@@ -731,7 +899,7 @@ namespace HYPJCW_HSZFT.Client
             string departmentCode = Console.ReadLine() ?? "";
 
             // Fetch the existing department data
-            var department = await ReadEntity<Departments>(departmentCode, "Departments");
+            var department = await ReadEntity<Departments>(departmentCode, "Department");
             if (department is null)
             {
                 Console.WriteLine("No department found with the given code.");
@@ -750,7 +918,7 @@ namespace HYPJCW_HSZFT.Client
             // Optionally, you can add code to update Employees
 
             // Call UpdateEntity method
-            bool success = await UpdateEntity(departmentCode, department, "Departments");
+            bool success = await UpdateEntity(departmentCode, department, "Department");
 
             if (success)
             {
@@ -789,7 +957,7 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine("Enter Manager ID:");
             string managerId = Console.ReadLine() ?? "";
 
-            bool success = await DeleteEntity<Managers>(managerId, "Managers");
+            bool success = await DeleteEntity<Managers>(managerId, "Manager");
 
             if (success)
             {
@@ -808,7 +976,7 @@ namespace HYPJCW_HSZFT.Client
             Console.WriteLine("Enter Department Code:");
             string departmentCode = Console.ReadLine() ?? "";
 
-            bool success = await DeleteEntity<Departments>(departmentCode, "Departments");
+            bool success = await DeleteEntity<Departments>(departmentCode, "Department");
 
             if (success)
             {
@@ -897,7 +1065,7 @@ namespace HYPJCW_HSZFT.Client
             var url = $"{baseUrl}/{endpoint}";
             using var client = new HttpClient();
 
-            
+
 
             var jsonString = JsonConvert.SerializeObject(item);
             var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
@@ -1024,7 +1192,7 @@ namespace HYPJCW_HSZFT.Client
                 throw;
             }
         }
-        public static async Task<List<Departments>> GetAllDepartments()
+        public static async Task<List<DepartmentDto>> GetAllDepartments()
         {
             var url = baseUrl + "/Departments";
             using var client = new HttpClient();
@@ -1034,13 +1202,13 @@ namespace HYPJCW_HSZFT.Client
                 response.EnsureSuccessStatusCode();
                 var responseBody = await response.Content.ReadAsStringAsync();
 
-                var managers = JsonConvert.DeserializeObject<List<Departments>>(responseBody);
-                return managers ?? new List<Departments>();
+                var managers = JsonConvert.DeserializeObject<List<DepartmentDto>>(responseBody);
+                return managers ?? new List<DepartmentDto>();
             }
             catch (HttpRequestException ex)
             {
                 Console.WriteLine($"There was an error: {ex.Message}");
-                return new List<Departments>();
+                return new List<DepartmentDto>();
             }
             catch (ArgumentException ex)
             {
@@ -1051,7 +1219,7 @@ namespace HYPJCW_HSZFT.Client
         //Show the rates of employees per level
         public static async Task<bool> ShowRatesOfEmployees()
         {
-            var url = baseUrl + "/Employees/levelrates";
+            var url = baseUrl + "/Employees/level-rates";
 
             using var client = new HttpClient();
             try
@@ -1082,6 +1250,317 @@ namespace HYPJCW_HSZFT.Client
             }
             return true;
         }
+
+        public static async Task<bool> OverOrUnderAverageSalary()
+        {
+            var url = baseUrl + "/Employees/under-or-over-avr-salary";
+
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var content = await response.Content.ReadAsStringAsync();
+
+                AveragesalaryDto rate = JsonConvert.DeserializeObject<AveragesalaryDto>(content);
+                Console.WriteLine($"Under Average: {rate.UnderAverage}" +
+                    $"\n Over average: {rate.OverAverage}");
+                
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Error parsing JSON response: {ex.Message}");
+                return false;
+            }
+            return true;
+        }
+        public static async Task<List<EmployeesShorterViewDto>> GetAllEmployeesBorn80List()
+        {
+            var url = baseUrl + "/Employees/born-in-the-80s";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var employees = JsonConvert.DeserializeObject<List<EmployeesShorterViewDto>>(responseBody);
+                return employees ?? new List<EmployeesShorterViewDto>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new List<EmployeesShorterViewDto>();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public static async Task<List<EmployeesShortViewDto>> GetAllEmployeesWorkingIn2Departments()
+        {
+            var url = baseUrl + "/Employees/employees-working-atleast-2departments";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var employees = JsonConvert.DeserializeObject<List<EmployeesShortViewDto>>(responseBody);
+                
+                return employees ?? new List<EmployeesShortViewDto>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new List<EmployeesShortViewDto>();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        public static async Task<List<EmployeesShortViewDto>> GetAllEmployeesOnPension()
+        {
+            var url = baseUrl + "/Employees/employees-on-pension";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var employees = JsonConvert.DeserializeObject<List<EmployeesShortViewDto>>(responseBody);
+
+                return employees ?? new List<EmployeesShortViewDto>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new List<EmployeesShortViewDto>();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        public static async Task<List<EmployeesShortViewDto>> GetAllEmployeesWorkingOnPension()
+        {
+            var url = baseUrl + "/Employees/employees-working-but-pension";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var employees = JsonConvert.DeserializeObject<List<EmployeesShortViewDto>>(responseBody);
+                return employees ?? new List<EmployeesShortViewDto>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new List<EmployeesShortViewDto>();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        public static async Task<double> AverageOnPension()
+        {
+            var url = baseUrl + "/Employees/average-on-pension";
+
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var content = await response.Content.ReadAsStringAsync();
+                var average = double.Parse(content);
+                // Deserialize the JSON content into a LevelDto object
+
+                // Display the results
+                if(average == 0)
+                {
+                    return 0.00;
+                }
+                return average;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return 0;
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Error parsing JSON response: {ex.Message}");
+                return 0;
+            }
+        }
+        public static async Task<List<EmployeeSalaryDto>> AverageSalaryWithCommission()
+        {
+            var url = baseUrl + "/Employees/average-salary-with-commission";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var employees = JsonConvert.DeserializeObject<List<EmployeeSalaryDto>>(responseBody);
+                return employees ?? new List<EmployeeSalaryDto>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new List<EmployeeSalaryDto>();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        public static async Task<List<EmployeesShortViewDto>> GetAllEmployeesWithDoctorManager()
+        {
+            var url = baseUrl + "/Employees/employees-with-drmanagers";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var employees = JsonConvert.DeserializeObject<List<EmployeesShortViewDto>>(responseBody);
+                return employees ?? new List<EmployeesShortViewDto>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new List<EmployeesShortViewDto>();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        public static async Task<List<AverageEachLevelDto>> AverageEachLevel()
+        {
+            var url = baseUrl + "/Employees/average-each-level";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var average = JsonConvert.DeserializeObject<List<AverageEachLevelDto>>(responseBody);
+               
+                return average ?? new List<AverageEachLevelDto>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new  List<AverageEachLevelDto>();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        public static async Task<string> WhoEarnsMore()
+        {
+            var url = baseUrl + "/Employees/who-earns-more";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                // Display the response body
+                Console.WriteLine("Response from EmployeeLogic:");
+                Console.WriteLine(responseBody);
+
+                return responseBody;
+            }
+            catch (HttpRequestException ex)
+            {
+                return $"There was an error: {ex.Message}";
+            }
+            catch (ArgumentException ex)
+            {
+                return $"JSON Deserialization error: {ex.Message}";
+                throw;
+            }
+        }
+        public static async Task<HighestCommissionDto> HighestCommission()
+        {
+            var url = baseUrl + "/Employees/highest-commission-by-level";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var average = JsonConvert.DeserializeObject<HighestCommissionDto>(responseBody);
+                // Display the response body
+                return average ?? new HighestCommissionDto();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new HighestCommissionDto();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        public static async Task<EmployeesShortViewDto> EmployeeWithLeastProject()
+        {
+            var url = baseUrl + "/Employees/employee-least-projects";
+            using var client = new HttpClient();
+            try
+            {
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var average = JsonConvert.DeserializeObject<EmployeesShortViewDto>(responseBody);
+                // Display the response body
+                return average ?? new EmployeesShortViewDto();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"There was an error: {ex.Message}");
+                return new EmployeesShortViewDto();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"JSON Deserialization error: {ex.Message}");
+                throw;
+            }
+        }
+        ////employee-least-projects
         //Generic Methods to print out the API calls
         public static void StringFromList<T>(List<T> list) where T : class
         {
@@ -1092,8 +1571,20 @@ namespace HYPJCW_HSZFT.Client
             }
         }
         //Calling the method recursively when encountering a nested list
-        private static void PrintProperties(object item)
+        private static void PrintProperties(object item, HashSet<object> visited = null)
         {
+            if (visited == null)
+            {
+                visited = new HashSet<object>();
+            }
+
+            if (item == null || visited.Contains(item))
+            {
+                return;
+            }
+
+            visited.Add(item);
+
             var properties = item.GetType().GetProperties();
             foreach (var prop in properties)
             {
@@ -1105,20 +1596,21 @@ namespace HYPJCW_HSZFT.Client
                     {
                         if (subItem is not null && subItem.GetType().IsClass && subItem.GetType() != typeof(string))
                         {
-                            PrintProperties(subItem);
+                            PrintProperties(subItem, visited);
                         }
                         else
                         {
-                            Console.WriteLine($"  - {subItem}");
+                            Console.WriteLine($"\n  - {subItem}");
                         }
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"{prop.Name}: {value}");
+                    Console.WriteLine($"\n{prop.Name}: {value}");
                 }
             }
         }
+        
         //Graph Design
         public static string GraphGraphic(int amount)
         {

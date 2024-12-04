@@ -1,5 +1,6 @@
 ﻿using HYPJCW_HSZFT.Entities.Entity_Models;
 using HYPJCW_HSZFT.Logic.Interfaces;
+using HYPJCW_HSZFT.Models.DTOs;
 using HYPJCW_HSZFT.Models.Entity_Models;
 using Microsoft.AspNetCore.Mvc;
 namespace HYPJCW_HSZFT.Endpoint.Controllers
@@ -57,7 +58,7 @@ namespace HYPJCW_HSZFT.Endpoint.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("/Managers")]
         public ActionResult<List<Managers>> ReadAll()
         {
             var managers = managerLogic.ReadAll();

@@ -1,4 +1,5 @@
 ﻿using HYPJCW_HSZFT.Data;
+using HYPJCW_HSZFT.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,9 @@ namespace HYPJCW_HSZFT.Repository
         public abstract T Read(string id);
         public abstract void Update(T item);
 
-
+        public Task Create(EmployeeDto employeeDto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
